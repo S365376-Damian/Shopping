@@ -1,0 +1,1 @@
+mongorestore.exe --host localhost --port 27017 --username vohungvi --password viscomsolution --db tmdt .\backup_db\tmdt

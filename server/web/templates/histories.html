@@ -1,0 +1,299 @@
+{% extends 'base_dashtreme.html' %}
+{% block head %}
+<title>Histories</title>
+<style>
+    /* .input-group{
+        display: inline-table;
+    } */
+    /* .input-group .form-control:last-child
+    {
+        border-radius: 0px !important;
+    } */
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title">Class predicted
+                    <div class="row" style="padding:10px 0 0 10px">
+                        <div class="col-md-1 col-lg-1" style="min-width: fit-content;">                                
+                            <input type="date" placeholder="Từ ngày" name="text" id='txt_from_date' class="form-control ">  
+                        </div>
+                        <div class="col-md-1 col-lg-1"  style="min-width: fit-content; padding: 0px;">
+                            <input type="date" placeholder="Đến ngày" name="text" id='txt_to_date' class="form-control "> 
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" placeholder="email/phone" name="text" id='txt_search' class="form-control "> 
+                        </div>
+                        <div class="col-md-2">
+                            <button id ="btn_search" class="btn btn-primary btn-default">
+                                <i class="fas fa-search"></i> Search</button>
+                        </div>
+                        <span id="lbl_count"></span>
+                    </div>
+                </div>
+                <hr>
+                <form>
+                    <div class="table-responsive">
+                        <table id="result_table" class="table align-items-center table-flush table-borderless">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Image</th>
+                                    <th>User</th>
+                                    <th>Total objects</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+$(document).ready(function () {
+
+
+});
+
+
+
+g_videoWidth = 640
+g_videoHeight = 480
+
+g_startTime = new Date();
+g_endTime = new Date();
+g_base64_string1 = ""
+g_status = "Ready"
+$(document).ready(function () {
+    SetDate($('#txt_from_date'))
+    SetDate($('#txt_to_date'))
+});
+
+$("#btn_search").click(function () {
+    GetHistories()
+});
+
+function GetHistories() {
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "fromDate": $('#txt_from_date').val(),
+        "toDate": $('#txt_to_date').val(),
+        "order_by": "-timeCreate",
+        "search_string": $("#txt_search").val(),
+        "status": $('#cb_status').find(":selected").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/history/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchSuccess, genericFailCB)
+}
+
+function onSearchSuccess(res) {
+    var index = 1
+    g_users = res.objects
+    if(g_users.length == 0)
+    {
+        ShowToast("Không tìm thấy")
+    }
+    for (i = 0; i < g_users.length; i++) {
+        $('#result_table > tbody:last-child').append(genRow(g_users[i], index++))
+    }
+    $("#search_result").show()
+}
+
+function PrintSuccess(msg) {
+    document.getElementById("lbl_status").innerText = msg
+    document.getElementById("lbl_status").style.color = "#7cd37c"
+}
+
+function PrintError(msg) {
+    document.getElementById("lbl_status").innerText = msg
+    document.getElementById("lbl_status").style.color = "red"
+}
+
+$("#btn_startWebcam").click(function () {
+    document.getElementById("canvasWebcam").style.display = "none"
+    document.getElementById("img_source").style.display = "none"
+    document.getElementById("video1").style.display = "block"
+
+    video = document.querySelector("#video1");
+    if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (s) {
+                stream = s
+                video.srcObject = stream;
+                video.play();
+
+                document.getElementById("btn_startWebcam").style.display = "none"
+                document.getElementById("btn_takePicture").style.display = "inline"
+            })
+            .catch(function (e) {
+                console.log(e);
+            });
+    }
+})
+
+$("#btn_takePicture").click(function () {
+    document.getElementById("canvasWebcam").style.display = "block"
+    document.getElementById("btn_startWebcam").style.display = "inline"
+    document.getElementById("btn_takePicture").style.display = "none"
+    document.getElementById("video1").style.display = "none"
+
+    canvas = document.getElementById('canvasWebcam');
+    var context = canvas.getContext('2d');
+    canvas.width = g_videoWidth;
+    canvas.height = g_videoHeight;
+    context.drawImage(video, 0, 0, g_videoWidth, g_videoHeight);
+
+
+    video = document.querySelector("#video1");
+    video.pause();
+    video.srcObject = null;
+    stream.getVideoTracks()[0].stop();
+
+    g_base64_string1 = canvas.toDataURL() + "=="
+
+    CheckCondition()
+})
+
+
+
+$("#uploadImage").on('change', function (e) {
+    document.getElementById("video1").style.display = "none"
+
+    g_base64_string1 = ""
+    if (this.files && this.files[0]) {
+        //load image to canvas
+        var URL = window.URL;
+        var url = URL.createObjectURL(e.target.files[0]);
+
+        img_source = document.getElementById("img_source")
+        img_source.onload = function () {
+            g_base64_string1 = ResizeImage(img_source, g_videoWidth)
+            CheckCondition()
+        }
+        img_source.src = url;
+
+        document.getElementById("canvasWebcam").style.display = "none"
+        document.getElementById("img_source").style.display = "block"
+    }
+})
+
+
+function ResizeImage(img, maxWidth) {
+    newWidth = img.width
+    newHeight = img.height
+
+    if (img.width > maxWidth) {
+        newWidth = maxWidth
+        newHeight = ((img.height * maxWidth) / img.width)
+    }
+
+
+
+    // create an off-screen canvas
+    var canvas = document.createElement('canvas'),
+        ctx = canvas.getContext('2d');
+
+    // set its dimension to target size
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+
+    // draw source image into the off-screen canvas:
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    // encode image to data-uri with base64 version of compressed image
+    return canvas.toDataURL() + "==";
+}
+
+function CheckCondition() {
+    if (g_base64_string1 == "") {
+        document.getElementById("btn_predict").disabled = true
+    }
+    else {
+        document.getElementById("btn_predict").disabled = false
+    }
+}
+
+$("#btn_predict").click(function () {
+    if (g_status != "Ready")
+        return
+
+    PrintSuccess("")
+    $("#lbl_count").html("")
+    $('#result_table > tbody tr').remove()
+
+    document.getElementById("loading_icon").style.display = "inline-block"
+
+    g_status = "Sending"
+    g_startTime = new Date()
+
+    g_base64_string1 = g_base64_string1.replace("data:image/jpeg;base64,", "")
+    g_base64_string1 = g_base64_string1.replace("data:image/png;base64,", "")
+
+
+    request_data = {
+        "imageBase64": g_base64_string1,
+        "isBase64": "True",
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + "/api/beverage/detect"
+    ajaxRequest("POST", host_request, request_data, onDetectSuccess, onDetectFailed)
+})
+
+function onDetectSuccess(res) {
+    g_status = "Ready"
+    document.getElementById("loading_icon").style.display = "none"
+    document.getElementById("img_result").style.display = "block"
+    document.getElementById("img_result").src = "data:image/png;base64," + res.image_base64
+
+    for (let i = 0; i < res.classes.length; i++) {
+        $('#result_table > tbody:last-child').append(genRow(res.classes[i], (i + 1)))
+    }
+
+    $("#lbl_count").html("(" + res.classes.length + ")")
+    PrintSuccess("Elapsed: " + res.elapsed + " s")
+}
+
+function genRow(obj, order) {
+    console.log(obj)
+    row = '<tr class="trow">'
+    if (obj.class == "CarFront") row = '<tr class="trow" style="color: #9d9dff; font-weight: bold;">'
+    else if (obj.class == "BikeFront") row = '<tr class="trow" style="color: #ff7676; font-weight: bold;">'
+    else if (obj.class == "CarBack") row = '<tr class="trow" style="color: #61ff61;font-weight: bold;">'
+    else if (obj.class == "BikeBack") row = '<tr class="trow" style="color: #ef65ff; font-weight: bold;">'
+
+    row += "<td>" + order + "</td>" +
+        "<td><img style='max-height: 100px' src='/media/" + obj.outputPath + "'></td>" +
+        "<td>" + obj.email + "</td>" +
+        "<td>" + obj.results.length + "</td>" +
+        "<td>" + datetimeConverter(obj.timeCreate.$date) + "</td>" +
+        "</tr>"
+    return row
+}
+
+function onDetectFailed(res) {
+    g_status = "Ready"
+    document.getElementById("loading_icon").style.display = "none"
+
+    ShowToast(GetErrorMessage(res))
+}
+
+
+</script> {% endblock %}

@@ -1,0 +1,929 @@
+
+<link href="/static/css/home.css" rel="stylesheet">
+<link href="/static/css/login.css" rel="stylesheet">
+{% extends 'base_dashtreme_full_width.html' %}
+<!-- tmdt css-->
+
+{% block head %}
+<title>Tài khoản của tôi</title>
+<style>
+    .star-rating {
+        direction: rtl;
+        display: inline-block;
+        font-size: 3em;
+        unicode-bidi: bidi-override;
+    }
+
+    .star-rating input[type="radio"] {
+        display: none;
+    }
+
+    .star-rating label {
+        cursor: pointer;
+    }
+
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input[type="radio"]:checked ~ label {
+        color: #f5b301;
+    }
+    .btn_evaluate{
+        padding: 5px 10px;
+        border-radius: 4px;
+        background-color: black;
+        color: #dcdcdc;
+        cursor: pointer;
+    }
+    #display_info{
+        width: 70% !important;
+    }
+    #display_list_chosse{
+        width: 30%;
+    }
+    .img_order{
+        max-width: 80px;
+        height: auto;
+    }
+    .img_order_mobile{
+        max-width: 120px;
+        height: auto;
+    }
+    .th_order{
+        font-size: 18px;
+        font-weight: 400 !important;
+        padding: 30px 12px !important;
+        color: #222;
+        text-align: center;
+    }
+    #list_item_mobile{
+        flex-direction: column;
+        display: none;
+    }
+    @media all and (max-width: 1024px) {
+    .login_content{
+        display: block;
+        padding-bottom: 20px;
+    }
+    .login_content_left{
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .login_content_right{
+        width: 100%;
+    }
+    .btn_social{
+        margin: 0 90px;
+    }
+    #display_info{
+        width: 100% !important;
+    }
+    #display_list_chosse{
+        width: 100% !important;
+    }
+    #list_item_pc{
+            display: none;
+        }
+        #list_item_mobile{
+            display: flex;
+        }
+    }
+
+    @media all and (max-width: 786px) {
+        .login_list_progress{
+            display: none;
+        }
+        .login_content{
+            padding: 0 15px;
+            padding-top: 145px;
+        }
+        .btn_social{
+            margin: 0;
+            margin-top: 20px;
+        }
+        #display_list_chosse{
+            width: 100% !important;
+        }
+        .login_content_right_body_email, .login_content_right_body_password{
+        flex-direction: column;
+        }
+        .input_login{
+            width: 100%;
+        }
+        #list_item_pc{
+            display: none;
+        }
+        #list_item_mobile{
+            display: flex;
+        }
+       
+    }
+</style>
+{% endblock %}
+{% block body %}
+
+<div class="mobile_menu">
+    <div id="logo_center">
+        <img style="vertical-align: middle; width: 100px;" src="../static/img/logo.jpg"></img>
+    </div>
+    <div class="list_mobile_menu">
+        <div id="btn_menuMobile_Home" class="item_mobile_menu">Trang chủ</div>
+        <div class="item_mobile_menu">Giới thiệu</div>
+        <div id="btn_showListItem" class="item_mobile_menu">Shop Online
+            <span  class="icon-sub-menu"><i id="changeIcon" class="fas fa-angle-down"></i></span>
+        </div>
+        <div class="list_sub_menu item_mobile_menu"></div>
+        <div id="btn_blogs_mobile"  class="item_mobile_menu">Blog</div>
+    </div>
+</div>
+<div id="mobile_overplay"></div>
+<div class="header_home">
+    <div>
+        <img class="img_top_header" src="../static/img/bg_header.jpg"></img>
+    </div>
+
+    <div class="header_home_center">
+        <div class="emty"></div>
+        <div class="center_text_mobile">
+             
+        </div>
+        <div class="right_center_header">
+            <div class="center_text_mobile" id="my_account">Tài khoản</div>
+            <div class="icon_account center_text_mobile"><i style="height:14px; width: 14px;" class="icon_cart_i far fa-user"></i></div>
+            <div style="display: flex;" class="changeCart">
+                <div onclick="GotoCartPage()" id="btn_cart" class="my_cart">Giỏ hàng</div>
+                <div class="icon_cart"><i style="height:14px; width: 14px;" class="fas fa-shopping-cart icon_cart_i"></i></div>
+                <div style="padding: 0 10px;" id="lbl_numberCart" hidden>0</div>
+            </div>
+        </div>
+    </div> 
+    
+    <div class="nav_header">
+        <div class="nav_header_list">
+            <div class="nav_header_item">Giới thiệu</div>
+            <div id="shop_online" class="nav_header_item">Shop Online
+                <div class="nav_header_item_sub">
+                </div>
+            </div>
+            <div id="btn_blogs" class="nav_header_item">Blog</div>
+            <div id="btn_bars">
+                <i style="font-size: 20px;" class="fa fa-bars"></i>
+            </div>
+        </div>
+        <div id="logo" style="cursor: pointer;">
+            <img class="logo" src="../static/img/logo.jpg"></img>
+        </div>
+        <div class="nav_header_list">
+            <div class="nav_header_item" style="margin-left: auto;">Hướng dẫn mua hàng</div>
+            <div id="btn_search">
+                <i style="font-size: 20px;" class="fas fa-search"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="login_list_progress">
+   <div id="btn_home" class="login_show_li">Trang chủ</div>
+   <span class="sep">/</span>
+   <div id="lbl_titleProgress" class="login_hide_acc">Tài khoản của bạn</div>
+</div>
+
+<div class="login_content">
+    <div id="display_list_chosse" class="login_content_left">
+        <div class="list_chosse">
+            <div class="title_list_chosse">MY ACCOUNT</div>
+            <div id="chosse_info" class="item_list_chosse">THÔNG TIN</div>
+            <div id="chosse_order" class="item_list_chosse">ĐƠN HÀNG</div>
+            <div id="chosse_admin" class="item_list_chosse">BÁN HÀNG</div>
+            <div id="btn_logout" class="item_list_chosse">ĐĂNG XUẤT</div>
+        </div>
+    </div>
+
+    <div id="display_info" class="login_content_right">
+        <div class="login_content_right_top">
+            <div id="title_chosse" class="login_content_right_top_title">
+                Thông tin tài khoản
+            </div>
+        </div>
+        <div id="content_info">
+            <div  class="login_content_right_body">
+                <div class="login_content_right_body_email">
+                    <div style="text-align: center; display: flex; align-items: center;">
+                        <i class="fa fa-user login_i"></i>
+                        Họ tên
+                        <span class="text-danger">*</span>
+                    </div>
+                    <input id="txt_name" class="input_login" type="text">
+                </div>
+                <div class="login_content_right_body_password">
+                    <div style="text-align: center; display: flex; align-items: center;">
+                        <i class="fa fa-envelope login_i"></i>
+                        Email
+                        <span class="text-danger">*</span>
+                    </div>
+                    <input id="txt_email" class="input_login" name="password" type="email">
+                </div>
+                <div class="login_content_right_body_password">
+                    <div style="text-align: center; display: flex; align-items: center;">
+                        <i class="fas fa-map-marked login_i"></i>
+                        Địa chỉ
+                        <span class="text-danger">*</span>
+                    </div>
+                    <input id="txt_address" class="input_login" type="text">
+                </div>
+                <div class="login_content_right_body_password">
+                    <div style="text-align: center; display: flex; align-items: center;">
+                        <i class="fas fa-user login_i"></i>
+                        Tên đăng nhập
+                        <span class="text-danger">*</span>
+                    </div>
+                    <input id="txt_nameLogin" class="input_login" type="text">
+                </div>
+            </div>
+        </div>
+        <div id="content_info1">
+            <div class="login_content_right_top">
+                <div id="title_chosse" class="login_content_right_top_title">
+                    Đổi mật khẩu
+                </div>
+            </div>
+            <div id="content_info1">
+                <div  class="login_content_right_body">
+                    <div class="login_content_right_body_password">
+                        <div style="text-align: center; display: flex; align-items: center;">
+                            <i class="fas fa-lock login_i"></i>
+                            Mật khẩu hiện tại
+                            <span class="text-danger">*</span>
+                        </div>
+                        <input id="txt_password" class="input_login" type="password">
+                    </div>
+                    <div class="login_content_right_body_password">
+                        <div style="text-align: center; display: flex; align-items: center;">
+                            <i class="fas fa-lock login_i"></i>
+                            Mật khẩu mới
+                            <span class="text-danger">*</span>
+                        </div>
+                        <input id="txt_newPassword" class="input_login" type="password">
+                    </div>
+                    <div class="login_content_right_body_password">
+                        <div style="text-align: center; display: flex; align-items: center;">
+                            <i class="fas fa-lock login_i"></i>
+                            Xác nhận mật khẩu mới
+                            <span class="text-danger">*</span>
+                        </div>
+                        <input id="txt_newPasswordConfirm" class="input_login" type="password">
+                    </div>
+                </div>
+                <div class="login_content_right_bottom">
+                    <div>
+                        <div id="btn_update">
+                            Cập nhật
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content_order" style="display: none;">
+            <div id="list_item_pc" class="login_content_right_body">
+                <div  class="table-responsive">
+                    <table class="table" id="result_table">
+                        <thead style="background: #000000;">
+                            <tr id="tr_list_item">
+                                <th style="font-weight: 400; color: #ffffff;" class="th_order">STT</th>
+                                <th style="font-weight: 400; color: #ffffff;" class="th_order">Sản phẩm</th>
+                                <th style="font-weight: 400; color: #ffffff;" class="th_order">Tên</th>
+                                <th style="font-weight: 400; color: #ffffff;" class="th_order">Giá</th>
+                                <th style="font-weight: 400; color: #ffffff;" class="th_order">Số lượng</th>
+                                <th style="font-weight: 400; color: #ffffff;" class="th_order">Tổng cộng</th>
+                                <th style="font-weight: 400; color: #ffffff;" class="th_order">Tình trạng</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="list_item_mobile" class="product_detail">
+            </div>
+        </div>
+
+        <div id="content_admin" style="display: none;">
+            <div  class="login_content_right_body">
+                <div class="login_content_right_body_email">
+                    <div style="text-align: center; display: flex; align-items: center;">
+                        <i class="fa fa-user login_i"></i>
+                        Tên shop
+                        <span class="text-danger">*</span>
+                    </div>
+                    <input id="txt_nameAdmin" class="input_login" type="text">
+                </div>
+                <div class="login_content_right_body_email">
+                    <div style="text-align: center; display: flex; align-items: center;">
+                        <i class="fa fa-phone login_i"></i>
+                        SĐT
+                        <span class="text-danger">*</span>
+                    </div>
+                    <input id="txt_phoneAdmin" class="input_login" type="number">
+                </div>
+                <div class="login_content_right_body_password">
+                    <div style="text-align: center; display: flex; align-items: center;">
+                        <i class="fa fa-envelope login_i"></i>
+                        Email
+                        <span class="text-danger">*</span>
+                    </div>
+                    <input id="txt_emailAdmin" class="input_login" name="password" type="email">
+                </div>
+                <div class="login_content_right_body_password">
+                    <div style="text-align: center; display: flex; align-items: center;">
+                        <i class="fas fa-map-marked login_i"></i>
+                        Địa chỉ
+                        <span class="text-danger">*</span>
+                    </div>
+                    <input id="txt_addressAdmin" class="input_login" type="text">
+                </div>
+
+                <div class="login_content_right_bottom">
+                    <div>
+                        <div id="btn_updateAdmin">
+                            Cập nhật
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer_home">
+    <div class="footer_home_list">
+        <div class="footer_home_item">
+            <div class="footer_home_item_hotline">
+                <span>HOTLINE:</span>
+                <a class="sdt">0896462282</a>
+            </div>
+            <div onclick="GotoTypePagePoliCy('bao-mat-thong-tin')" class="footer_home_item_link">Chính sách bảo mật thông tin khách hàng</div>
+            <div onclick="GotoTypePagePoliCy('doi-tra-san-pham')" class="footer_home_item_link">Chính sách đổi trả sản phẩm</div>
+            <div onclick="GotoTypePagePoliCy('bao-hanh')" class="footer_home_item_link">Chính sách bảo hành sản phẩm</div>
+            <div onclick="GotoTypePagePoliCy('van-chuyen')" class="footer_home_item_link">Chính sách giao nhận, vận chuyển</div>
+            <div onclick="GotoTypePagePoliCy('thanh-toan')" class="footer_home_item_link">Phương thức thanh toán</div>
+            <div onclick="GotoTypePagePoliCy('khach-hang-than-thiet')" class="footer_home_item_link">Chính sách khách hàng thân thiết</div>
+        </div>
+    </div>
+    <div style="width: 100%; justify-content: center; display: flex; margin-top: 20px;"><a href="https://www.facebook.com/AnQuocnT">Developed by Quốc An</a></div>
+</div>
+
+<div id="item_template" style="width: 100%; flex-direction: row; padding: 10px; justify-content: space-between; border-bottom: 1px solid #dcdcdc; display: flex;" hidden>
+    <img id="product_img" class='img_order_mobile' src=''>
+    <div style="max-width: 200px; width: 200px; display: flex; flex-direction: column; justify-content: center;" class="item_order_content">
+        <div id="lbl_stt" style="color: #222; font-size: 16px;"></div>
+        <div id="lbl_productName" style="color: #222; font-size: 16px;"></div>
+        <div id="lbl_productSize" style="color: #222; font-size: 16px;"></div>
+        <div style="display: flex; width: 100%; justify-content: space-between;">
+            <div id="lbl_productPrice" style="color: #222; margin-top: 10px; font-weight: bold;"></div>
+        </div>
+        <div id="lbl_productStatus" style="color: #222; font-size: 16px; font-style: italic;"></div>
+        <div id="btn_addEvaluateMobile" style="display: none; color: #ffffff; font-size: 16px; border-radius: 4px; background-color: #000000; text-align: center; cursor: pointer;">Đánh giá</div>
+    </div>
+</div>
+
+<!-- edit modal end-->
+
+<!-- modals end -->
+
+<div class="modal fade" id="modal_evaluate" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content panel-yellow" style="background-color: #ffffff;">
+            <div class="modal-header panel-heading" style="background-color: #000000;">                
+                <h4 class="modal-title" id="lbl_modal_title">Đánh giá</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body panel-body" style="background-color: #ffffff; color: #222;">
+                <div style="align-items: center; justify-content: center;" class="row form-group">
+                    <div class="star-rating">
+                        <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 stars">☆</label>
+                        <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars">☆</label>
+                        <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars">☆</label>
+                        <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars">☆</label>
+                        <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star">☆</label>
+                    </div>
+                </div>
+                <div class="row form-group">
+                   <textarea style="width: 100%; margin: 0 10px;" id="txt_content"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                    <div class="pull-right">
+                        <button id="btn_addEvaluate" class="btn btn-default btn-success pull-right"><span class="fa fa-product"><span>
+                            Đánh giá</button>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- end modal body-->
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+g_user = null
+g_shop = null
+g_chosse = "info"
+g_types = []
+g_showItem = false
+g_orders = null
+g_products = null
+g_numStart = 0 
+g_productEvaluatePk = null
+
+$(document).ready(function () {
+    if(Cookies.get("token") == null || Cookies.get("token") == ""){
+        window.location.href = "/login";
+    }
+    chosse = findGETParameter("chosse")
+    if(chosse == "order") g_chosse = 'order'
+    GetTypeList()
+    GetUser()
+    ShowActiveChosse()
+    const ratingInputs = document.querySelectorAll('.star-rating input[type="radio"]');
+    ratingInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            g_numStart = this.value
+        });
+    });
+});
+
+function GetMyNewOrder() 
+{
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "user_pk":g_user._id.$oid
+    }
+    host_request = gethost() + '/api/order/getMyNew'
+    ajaxRequest("POST", host_request, request_data, onGetMyNewOrderSuccess, genericFailCB)
+}
+
+function onGetMyNewOrderSuccess(res) {
+    orders = res.objects
+    if(orders.length > 0){
+        $("#lbl_numberCart").removeAttr('hidden')
+        document.getElementById("lbl_numberCart").innerText = g_orders.length
+        $('.changeCart').css('background-color', '#ff4136');
+    }
+    else
+    {
+        $("#lbl_numberCart").hide()
+        $('.changeCart').css('background-color', '#000000');
+    }
+    GetMyOrder()
+}
+
+function GetProductList() {
+    request_data = {
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/product/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchProductSuccess, genericFailCB)
+}
+
+function onSearchProductSuccess(res) {
+    var index = 1
+    g_products = res.objects
+    GetMyNewOrder()
+}
+
+function ShowActiveChosse(){
+    if(g_chosse == "info"){
+        $('#chosse_admin').removeClass('active');
+        $('#chosse_info').addClass('active');
+        $('#chosse_order').removeClass('active');
+        document.getElementById("lbl_titleProgress").innerText = "Tài khoản của bạn"
+        document.getElementById("title_chosse").innerText = "Thông tin tài khoản"
+        $("#content_admin").hide()
+        $("#content_order").hide()
+        $("#content_info").show()
+        $("#content_info1").show()
+    }
+    else if(g_chosse == 'order'){
+        $('#chosse_admin').removeClass('active');
+        $('#chosse_order').addClass('active');
+        $('#chosse_info').removeClass('active');
+        document.getElementById("lbl_titleProgress").innerText = "Danh sách đơn hàng"
+        document.getElementById("title_chosse").innerText = "Thông tin đơn hàng" 
+        $("#content_admin").hide()
+        $("#content_order").show()
+        $("#content_info").hide()
+        $("#content_info1").hide()
+    }
+    else
+    {
+        GetShop()
+        $('#chosse_admin').addClass('active');
+        $('#chosse_info').removeClass('active');
+        $('#chosse_order').removeClass('active');
+        document.getElementById("lbl_titleProgress").innerText = "Cập nhật cửa hàng"
+        document.getElementById("title_chosse").innerText = "Cập nhật cửa hàng" 
+        $("#content_admin").show()
+        $("#content_order").hide()
+        $("#content_info").hide()
+        $("#content_info1").hide()
+    }
+}
+
+function GetTypeList() {
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "search_string": $("#txt_search").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/type/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchSuccess, genericFailCB)
+}
+
+function onSearchSuccess(res) {
+    var index = 1
+    g_types = res.objects
+    var parentElement = $('.nav_header_item_sub');
+    var parentElementSub = $('.list_sub_menu');
+    for (i = 0; i < g_types.length; i++) {
+        var newItem = $('<div>').addClass('nav_header_item_sub_item').text(g_types[i].name);
+        var newItemSub = $('<div>').addClass('item_sub_menu').text(g_types[i].name);
+        newItem.attr("onClick", 'GotoTypePage("' + g_types[i]._id.$oid + '")');
+        newItemSub.attr("onClick", 'GotoTypePage("' + g_types[i]._id.$oid + '")');
+        parentElement.append(newItem);
+        parentElementSub.append(newItemSub);
+    }
+}
+
+$("#btn_home").click(function () {
+    window.location.href = "/";
+});
+
+$("#btn_logout").click(function () {
+    showNotice("Đăng xuất thành công")
+    setTimeout(function() {
+        window.location.href = "/logout";
+    }, 2000); // 2 giây
+});
+
+$("#logo").click(function () {
+    window.location.href = "/";
+});
+
+$("#btn_cart").click(function () {
+    window.location.href = "/cart";
+});
+
+$("#logo_center").click(function () {
+    window.location.href = "/";
+});
+
+$("#btn_blogs").click(function () {
+    window.location.href = "/blogs";
+});
+
+$("#btn_blogs_mobile").click(function () {
+    window.location.href = "/blogs";
+});
+
+$("#btn_bars").click(function () {
+    document.getElementById("mobile_overplay").style.visibility = "visible"
+    document.querySelector('.mobile_menu').classList.toggle('active');
+    document.querySelector('#mobile_overplay').classList.toggle('active');
+});
+
+$("#mobile_overplay").click(function () {
+    document.getElementById("mobile_overplay").style.visibility = "hidden"
+    document.querySelector('.mobile_menu').classList.toggle('active');
+    document.querySelector('#mobile_overplay').classList.toggle('active');
+});
+
+$("#btn_menuMobile_Home").click(function () {
+    window.location.href = "/";
+});
+
+$("#chosse_info").click(function () {
+    g_chosse = 'info'
+    ShowActiveChosse()
+});
+
+$("#chosse_order").click(function () {
+    g_chosse = 'order'
+    ShowActiveChosse()
+});
+
+$("#chosse_admin").click(function () {
+    g_chosse = 'admin'
+    ShowActiveChosse()
+});
+
+$("#btn_showListItem").click(function () {
+    if(!g_showItem)
+    {
+        document.getElementById("changeIcon").classList.remove("fas", "fa-angle-down");
+        document.getElementById("changeIcon").classList.add("fas", "fa-times");
+        g_showItem = true
+    }else{
+        document.getElementById("changeIcon").classList.remove("fas", "fa-times");
+        document.getElementById("changeIcon").classList.add("fas", "fa-angle-down");
+        g_showItem = false
+    }
+    document.querySelector('.list_sub_menu').classList.toggle('active');
+});
+
+function GetUser() 
+{
+    if(Cookies.get("token") == undefined) return
+    request_data = {
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/user/get'
+    ajaxRequest("POST", host_request, request_data, onGetUserSuccess, genericFailCB)
+}
+
+function onGetUserSuccess(res) {
+    g_user = res
+    $("#txt_name").val(g_user.fullname)
+    $("#txt_email").val(g_user.email)
+    $("#txt_address").val(g_user.address)
+    $("#txt_nameLogin").val(g_user.nameLogin)
+    $("#txt_password").val("")
+    $("#txt_newPassword").val("")
+    $("#txt_newPasswordConfirm").val("")
+    GetProductList()
+}
+
+function GetMyOrder() 
+{
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "user_pk":g_user._id.$oid
+    }
+    host_request = gethost() + '/api/order/getMyOrder'
+    ajaxRequest("POST", host_request, request_data, onGetMyOrderSuccess, genericFailCB)
+}
+
+function onGetMyOrderSuccess(res) {
+    g_listOrderPk = []
+    $('#result_table > tbody tr').remove()
+    $("#list_item_mobile").empty()
+    g_orders = res.objects
+    index = 1
+    for (let i = 0; i < g_orders.length; i++) {
+        let status = "Đang giao"
+        if(g_orders[i].status == 'Waiting') status = "Chờ xác nhận"
+        else if(g_orders[i].status == 'Completed') status = "Hoàn thành"
+        product = GetObjectByPk(g_products, g_orders[i].product_pk)
+        if(product == null) continue
+        $('#result_table > tbody:last-child').append(genRow(g_orders[i], product, index))
+        let item_template = $("#item_template").clone()
+        item_template.removeAttr('hidden')
+        item_template.find("#lbl_stt").html("STT: " + (index))
+        index += 1
+        item_template.find("#product_img").attr("src",product.image)
+        item_template.find("#lbl_productName").html(product.product_name)
+        item_template.find("#lbl_productSize").html("Size: " + g_orders[i].size + " x " + g_orders[i].quantity)
+        item_template.find("#lbl_productPrice").html((product.price * g_orders[i].quantity).toLocaleString() + "đ")
+        item_template.find("#lbl_productStatus").html(status)
+        if(status == "Hoàn thành")
+        {
+            item_template.find("#btn_addEvaluateMobile").show()
+            item_template.find("#btn_addEvaluateMobile").attr("onClick", 'EvaluateProduct("' + product._id.$oid + '")');
+        }
+        else{
+            item_template.find("#btn_addEvaluateMobile").hide()
+        }
+        $("#list_item_mobile").append(item_template)
+    }
+    $("#search_result").show()
+}
+
+function genRow(order, product, index) {
+    status = "Đang giao"
+    if(order.status == 'Waiting') status = "Chờ xác nhận"
+    else if(order.status == 'Completed') status = "Hoàn thành"
+    row = '<tr class="trow" id="' + order._id.$oid + '">'
+    row += "<td style='vertical-align: middle; color: #222'>" + index + "</td>" +
+        "<td style='vertical-align: middle;''><img class='img_order' src='" + product.image + "'></td>" +
+        "<td style='vertical-align: middle; color: #222''>" + order.product_name + "<br>" + "Size:" + order.size + "</td>" +
+        "<td style='vertical-align: middle; text-align: center; color: #222''>" + product.price.toLocaleString() + "đ" + "</td>" +
+        "<td style='vertical-align: middle; text-align: center; color: #222''>" + order.quantity + "</td>" +
+        "<td style='vertical-align: middle; text-align: center; color: #222''>" + (product.price * order.quantity).toLocaleString() + "đ" + "</td>" +
+        "<td style='vertical-align: middle;color: #222''>" + status + "</td>" 
+        if(status == "Hoàn thành")
+        {
+            row += "<td style='vertical-align: middle; color: #222;'>" + 
+       "<div class='btn_evaluate' onclick='EvaluateProduct(\"" + product._id.$oid + "\")'>Đánh giá</div>" + 
+       "</td>";
+        }
+    row += "</tr>"
+    return row
+}
+
+function GetShop() 
+{
+    if(Cookies.get("token") == undefined) return
+    request_data = {
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/shop/get'
+    ajaxRequest("POST", host_request, request_data, onGetShopSuccess, genericFailCB)
+}
+
+function onGetShopSuccess(res) {
+    g_shop = res
+    $("#txt_nameAdmin").val(g_shop.name)
+    $("#txt_emailAdmin").val(g_shop.email)
+    $("#txt_addressAdmin").val(g_shop.address)
+    $("#txt_phoneAdmin").val(g_shop.phone)
+}
+
+$("#btn_update").click(function () {
+    UpdateUser()
+});
+
+
+function UpdateUser() 
+{
+    if ($("#txt_name").val() == "") 
+    {
+        showError("Thiếu họ và tên")
+        return
+    }
+    else if ($("#txt_email").val() == "") 
+    {
+        showError("Thiếu email")
+        return
+    }
+    else if ($("#txt_address").val() == "") 
+    {
+        showError("Thiếu địa chỉ")
+        return
+    }
+    else if ($("#txt_nameLogin").val() == "") 
+    {
+        showError("Thiếu tên đăng nhập")
+        return
+    }
+    pk = ""
+    if(g_user != null)
+        pk = g_user._id.$oid
+    request_data = {
+        "pk" : pk,
+        "fullname": $("#txt_name").val(),
+        "email": $("#txt_email").val(),
+        "address": $("#txt_address").val(),
+        "nameLogin": $("#txt_nameLogin").val(),
+        "password": $("#txt_password").val(),
+        "newPassword": $("#txt_newPassword").val(),
+        "newPasswordConfirm": $("#txt_newPasswordConfirm").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/user/update'
+    ajaxRequest("POST", host_request, request_data, onUpdateUserSuccess, genericFailCB)
+}
+
+function onUpdateUserSuccess(res) {
+    showNotice("Cập nhật thành công!")
+    GetUser()
+}
+
+$("#btn_updateAdmin").click(function () {
+    UpdateShop()
+});
+
+
+function UpdateShop() 
+{
+    if ($("#txt_nameAdmin").val() == "") 
+    {
+        showError("Thiếu tên shop")
+        return
+    }
+    else if ($("#txt_emailAdmin").val() == "") 
+    {
+        showError("Thiếu email")
+        return
+    }
+    else if ($("#txt_addressAdmin").val() == "") 
+    {
+        showError("Thiếu địa chỉ")
+        return
+    }
+    pk = ""
+    if(g_shop != null)
+        pk = g_shop._id.$oid
+
+    request_data = {
+        "pk" : pk,
+        "name": $("#txt_nameAdmin").val(),
+        "phone": $("#txt_phoneAdmin").val(),
+        "address": $("#txt_address").val(),
+        "email": $("#txt_emailAdmin").val(),
+        "user_pk": g_user._id.$oid,
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/shop/update'
+    ajaxRequest("POST", host_request, request_data, onUpdateShopSuccess, genericFailCB)
+}
+
+function onUpdateShopSuccess(res) {
+    if(g_shop == null)
+    {
+        showNotice("Đăng ký thành công, vì lý do bảo mật vui lòng đăng nhập lại")
+        setTimeout(function() {
+            window.location.href = "/logout";
+        }, 2000)
+    }
+    else
+    {
+        showNotice("Cập nhật thành công!")
+        GetShop()   
+    }
+}
+
+$("#btn_addEvaluate").click(function () {
+    let product = GetObjectByPk(g_products, g_productEvaluatePk)
+    if (g_numStart == 0) 
+    {
+        showError("Bạn chưa chọn sao")
+        return
+    }
+    request_data = {
+        "product_pk" : product._id.$oid,
+        "product_name": product.product_name,
+        "user_pk": g_user._id.$oid,
+        "user_name": g_user.fullname,
+        "user_phone": g_user.phone,
+        "content": $("#txt_content").val(),
+        "point": g_numStart,
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/evaluate/update'
+    ajaxRequest("POST", host_request, request_data, onUpdateEvaluateSuccess, genericFailCB)
+});
+
+function onUpdateEvaluateSuccess(res) {
+    showNotice("Đánh giá thành công!")
+    $("#modal_evaluate").modal('hide')
+    g_numStart = 0
+}
+
+$(document).keydown(function (e) {
+if (e.which == 13) {
+    Login()
+}
+})
+
+// $("#btn_resetPassword").click(function () {
+//     if ($("#txt_email2").val() == "") {
+//         showError("Chưa nhập email")
+//         return
+//     }
+//     request_data = {
+//         "email": $("#txt_email2").val()
+//     }
+//     host_request = gethost() + '/api/user/SendEmailResetPassword'
+//     ajaxRequest("POST", host_request, request_data, onSendSuccess, onLoginFailed)
+// });
+
+function GotoTypePage(subject_pk)
+{
+    g_subject_pk = subject_pk
+    window.location = "/type/?pk=" + subject_pk
+}
+
+function onSendSuccess(res) {
+    showNotice(res["Success"])
+    $("#reset_password_modal").modal("hide")
+}
+
+function GotoTypePagePoliCy(name)
+{
+    window.location = "/policy/?name=" + name
+}
+
+function GotoCartPage(name)
+{
+    if(g_user == null){
+        showError("Bạn chưa đăng nhập")
+        setTimeout(function() {
+            window.location.href = "/login";
+        }, 1500)
+        return
+    }
+    window.location.href = "/cart";
+}
+
+function EvaluateProduct(pk){
+    $("#modal_evaluate").modal()
+    g_productEvaluatePk = pk
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,237 @@
+
+@font-face {
+    font-family: 'elle-futura';
+    src: url('../font/elle-futura-book_2.woff') format('truetype');
+}
+
+
+.login_list_progress{
+    display: flex;
+    background-color: #fafafa;
+    padding: 8px 64px;
+    color:#222;
+    padding-top: 168px;
+}
+
+.sep{
+    padding: 0 5px
+}
+
+.login_hide_acc{
+    color:#666;
+}
+
+.login_show_li{
+    cursor: pointer;
+}
+
+.login_content{
+    padding: 0 120px;
+    margin-top: 30px;
+    display: flex;
+    width: 100%;
+    gap: 4%;
+    padding-bottom: 120px;
+}
+
+.login_content_left{
+    width: 50%;
+}
+
+.login_content_right{
+    width: 50%;
+    border: 1px solid #eee;
+}
+
+.btn_social{
+    height: 70px;
+    margin: 0 40px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.btn_login_fb{
+    background-color: #3b5998;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.3s;
+}
+
+.btn_login_fb:hover{
+    background-color: #5872a7;
+}
+
+.btn_login_gg{
+    background-color: #dd4b39;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.btn_login_gg:hover{
+    background-color: #e26657;
+}
+
+.login_content_right_top{
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    background: url(../img/bg_title_login.webp) repeat #f5f5f5;
+}
+
+.login_content_right_body{
+    padding: 15px;
+    color: #444;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.login_content_right_body_email, .login_content_right_body_password{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+.login_i{
+    font-size: 16px;
+    padding: 0 5px;
+}
+
+.text-danger{
+    color: #ff4136 !important;
+    padding-left: 6px;
+}
+
+.input_login{
+    background: #f5f5f5;
+    border-radius: 3px;
+    font-size: 13px;
+    border: 1px solid #ddd;
+    box-shadow: inset 0 -1px 4px #eee;
+    color: #aaa;
+    width: 70%;
+    padding: 4px 5px;
+}
+
+.input_login:focus{
+    background: #fff;
+    border: 1px solid #aaa;
+    box-shadow: inset 0 -1px 4px #ccc;
+    color: #333;
+}
+
+.login_content_right_bottom{
+    padding: 0 15px 15px;
+    margin-top: 15px;
+    
+    >:first-child{
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #e5e5e5;
+        padding-top: 15px
+    }
+}
+
+#btn_login, #btn_addUser, #btn_update, #btn_missConfirm, #btn_updateAdmin{
+    background: #444;
+    color: #fff;
+    border: 1px solid #353535;
+    font-size: 13px;
+    line-height: 30px;
+    width: auto;
+    display: inline-block;
+    margin-right: 15px;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+#btn_register, #btn_registerAdmin{
+    font-size: 13px;
+    line-height: 30px;
+    width: auto;
+    display: inline-block;
+    background: #fff;
+    color: #666;
+    border: 1px solid #ddd;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+#have_acccount{
+    cursor: pointer;
+}
+
+.list_chosse{
+    display: flex;
+    flex-direction: column;
+}
+
+.title_list_chosse{
+    margin-bottom: 0;
+    border-bottom: none;
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 16px;
+    background-color: #252525;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 0;
+}
+
+.item_list_chosse{
+    padding: 14px 20px;
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 300;
+    color: #959595;
+    border-bottom: 1px solid hsla(0, 0%, 53%, .12);
+    border-right: 1px solid hsla(0, 0%, 53%, .12);
+    border-left: 1px solid hsla(0, 0%, 53%, .12);
+    cursor: pointer;
+}
+
+.active{
+    color: #222;
+    font-weight: bold;
+}
+
+@media all and (max-width: 1024px) {
+    .login_content{
+        display: block;
+        padding-bottom: 20px;
+    }
+    .login_content_left{
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .login_content_right{
+        width: 100%;
+    }
+    .btn_social{
+        margin: 0 90px;
+    }
+}
+
+@media all and (max-width: 786px) {
+    .login_list_progress{
+        display: none;
+    }
+    .login_content{
+        padding: 0 15px;
+        padding-top: 145px;
+    }
+    .btn_social{
+        margin: 0;
+        margin-top: 20px;
+    }
+}

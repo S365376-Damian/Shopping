@@ -1,0 +1,650 @@
+
+<link href="/static/css/home.css" rel="stylesheet">
+<link href="/static/css/product_detail.css" rel="stylesheet">
+{% extends 'base_dashtreme_full_width.html' %}
+<!-- tmdt css-->
+
+{% block head %}
+<title>Giỏ hàng</title>
+<style>
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+input[type="number"] {
+    pointer-events: none; /* Ngăn người dùng tương tác */
+}
+.sep{
+    padding-right: 5px;
+}
+.product_detail_listimg_img{
+    width: 100%;
+    object-fit: cover;
+}
+
+.product_detail_content_item_add{
+    font-size: 16px;
+    color: #fff;
+    height: 44px;
+    width: 320px;
+    max-width: 100%;
+    border-radius: 25px;
+    text-align: center;
+    line-height: 39px;
+    padding: 0;
+    font-weight: 300;
+    border: none;
+    display: inline-block;
+    border: 1px solid;
+    vertical-align: top;
+    background-color: #222;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+#order_points{
+    padding: 15px;
+    margin-top: -15px !important;
+}
+
+.order_bill_item{
+    width: 50%;
+}
+
+.product_detail_content_item_size{
+    box-sizing: content-box;
+    height: 30px;
+    cursor: pointer;
+    font-weight: 700;
+    color: #222;
+    display: inline-block;
+    min-width: 35px;
+    height: 35px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 50%;
+    text-transform: uppercase;
+    transition: border .2s;
+    font-weight: 400;
+    border: 1px solid #000;
+    margin: 0 8px;
+}
+
+#title_blog{
+    margin: 0 0 30px;
+    color: #222;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 42px;
+}
+#image_blog{
+    width: 100%;
+}
+#result_table{
+    color: #222;
+}
+.th_order{
+    font-size: 18px;
+    font-weight: 400 !important;
+    padding: 30px 12px !important;
+    color: #222;
+    text-align: center;
+}
+.img_order{
+    max-width: 120px;
+    height: auto;
+}
+#list_order{
+    border-bottom: 1px solid #d1d1d1;
+}
+#order_discount{
+    width: 58%;
+    padding: 0 15px;
+}
+.order_discount_title{
+    padding: 13px 36px;
+    font-size: 18px;
+    color: #252525;
+    border-radius: 0;
+    overflow: hidden;
+    margin: 0 0 20px;
+    line-height: 1.4;
+    background: #f8f8f8;
+    display: flex;
+    justify-content: space-between;
+}
+#order_pay{
+    width: 42%;
+    padding: 0 15px;
+}
+.order_bill{
+    padding: 15px 36px;
+    font-size: 18px;
+    color: #222;
+    display: flex;
+    background: #f8f8f8;
+}
+.order_total{
+    padding: 15px 36px;
+    font-size: 18px;
+    color: #222;
+    background: #f8f8f8;
+    display: flex;
+}
+#btn_pay{
+    line-height: 45px;
+    width: 100%;
+    display: block;
+    height: 50px;
+    color: #fff;
+    text-align: center;
+    font-weight: 400;
+    margin-top: 32px;
+    background: #222;
+    font-size: 22px;
+    cursor: pointer;
+}
+#btn_pay:hover{
+    opacity: .9;
+}
+#list_item_mobile{
+    flex-direction: column;
+    display: none;
+}
+.item_order_content{
+    padding: 0px 10px 0px
+}
+
+@media all and (max-width: 786px) {
+    .login_list_progress{
+        display: none;
+    }
+    .product_detail{
+        flex-direction: column;
+    }
+    .product_detail_listimg{    
+        width: 100%;
+        position: relative;
+    }
+    .product_detail_content{
+        width: 100%;
+    }
+    #list_item_pc{
+        display: none;
+    }
+    #order_points{
+        display: block !important;
+        flex-direction: row;
+        margin-top: 15px !important;
+    }
+    #order_discount{
+        width: 100%;
+    }
+    .order_discount_title{
+        flex-direction: column;
+        padding: 10px 0px;
+    }
+    #code_discount{
+        margin: 10px 0;
+    }
+    #order_pay{
+        width: 100%;
+    }
+    .order_bill{
+        border-bottom: 1px solid #dcdcdc;
+    }
+    #list_item_mobile{
+        display: flex;
+    }
+}
+</style>
+{% endblock %}
+{% block body %}
+<div class="mobile_menu">
+    <div id="logo_center">
+        <img style="vertical-align: middle; width: 100px;" src="../static/img/logo.jpg"></img>
+    </div>
+    <div class="list_mobile_menu">
+        <div id="btn_menuMobile_Home" class="item_mobile_menu">Trang chủ</div>
+        <div class="item_mobile_menu">Giới thiệu</div>
+        <div id="btn_showListItem" class="item_mobile_menu">Shop Online
+            <span  class="icon-sub-menu"><i id="changeIcon" class="fas fa-angle-down"></i></span>
+        </div>
+        <div class="list_sub_menu item_mobile_menu"></div>
+        <div id="btn_blogs_mobile"  class="item_mobile_menu">Blog</div>
+    </div>
+</div>
+<div id="mobile_overplay"></div>
+<div class="header_home">
+    <div>
+        <img class="img_top_header" src="../static/img/bg_header.jpg"></img>
+    </div>
+
+    <div class="header_home_center">
+        <div class="emty"></div>
+        <div class="center_text_mobile">
+             
+        </div>
+        <div class="right_center_header">
+            <div class="center_text_mobile" id="my_account">Tài khoản</div>
+            <div class="icon_account center_text_mobile"><i style="height:14px; width: 14px;" class="icon_cart_i far fa-user"></i></div>
+            <div onclick="GotoCartPage()" style="display: flex;" class="changeCart">
+                <div id="btn_cart" class="my_cart">Giỏ hàng</div>
+                <div class="icon_cart"><i style="height:14px; width: 14px;" class="fas fa-shopping-cart icon_cart_i"></i></div>
+                <div style="padding: 0 10px;" id="lbl_numberCart" hidden>0</div>
+            </div>
+        </div>
+    </div> 
+    
+    <div class="nav_header">
+        <div class="nav_header_list">
+            <div class="nav_header_item">Giới thiệu</div>
+            <div id="shop_online" class="nav_header_item">Shop Online
+                <div class="nav_header_item_sub">
+                </div>
+            </div>
+            <div id="btn_blogs" class="nav_header_item">Blog</div>
+            <div id="btn_bars">
+                <i style="font-size: 20px;" class="fa fa-bars"></i>
+            </div>
+        </div>
+        <div id="logo" style="cursor: pointer;">
+            <img class="logo" src="../static/img/logo.jpg"></img>
+        </div>
+        <div class="nav_header_list">
+            <div class="nav_header_item" style="margin-left: auto;">Hướng dẫn mua hàng</div>
+            <div id="btn_search">
+                <i style="font-size: 20px;" class="fas fa-search"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="body_home">
+    <div id="list_item_pc" class="product_detail">
+        <div class="table-responsive">
+            <table class="table" id="result_table">
+                <thead style="background: #f8f8f8;">
+                    <tr id="tr_list_item">
+                        <th class="th_order"></th>
+                        <th class="th_order"></th>
+                        <th class="th_order">Sản phẩm</th>
+                        <th class="th_order">Giá</th>
+                        <th class="th_order">Số lượng</th>
+                        <th class="th_order">Tổng cộng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="list_item_mobile" class="product_detail">
+    </div>
+
+    <!-- <div id="order_points" class="product_detail">
+        Bạn sẽ có được <strong style="padding: 0 5px; color: #000; font-weight: bold;">15 điểm </strong>  với đơn hàng này. Ưu đãi thẻ không áp dụng với các chương trình khuyến mãi khác!
+    </div> -->
+    <div style="margin-bottom: 100px;" id="order_card" class="product_detail">
+        <div id="order_discount">
+            <div class="order_discount_title">Nhập Mã Giảm Giá
+                <input id="code_discount">
+                <div style="background-color: rgb(255, 65, 54); padding: 5px; cursor: pointer;">Áp dụng</div>
+            </div>
+        </div>
+        <div id="order_pay">
+            <div class="order_bill">
+                <div id="totalProduct" class="order_total_product order_bill_item"></div>
+                <div id="totalPrice1" class="order_total_product order_bill_item"></div>
+            </div>
+            <div class="order_total">
+                <div style="width: 50%; color: #666;" class="order_total_product">Tổng cộng:</div>
+                <div id="totalPrice2" style="width: 50%; color: #222; font-weight: bold;" class="order_total_product"></div>
+            </div>
+            <div id="btn_pay">THANH TOÁN</div>
+        </div>
+    </div>
+</div>
+
+<div class="footer_home">
+    <div class="footer_home_list">
+        <div class="footer_home_item">
+            <div class="footer_home_item_hotline">
+                <span>HOTLINE:</span>
+                <a class="sdt">0896462282</a>
+            </div>
+            <div onclick="GotoTypePagePoliCy('bao-mat-thong-tin')" class="footer_home_item_link">Chính sách bảo mật thông tin khách hàng</div>
+            <div onclick="GotoTypePagePoliCy('doi-tra-san-pham')" class="footer_home_item_link">Chính sách đổi trả sản phẩm</div>
+            <div onclick="GotoTypePagePoliCy('bao-hanh')" class="footer_home_item_link">Chính sách bảo hành sản phẩm</div>
+            <div onclick="GotoTypePagePoliCy('van-chuyen')" class="footer_home_item_link">Chính sách giao nhận, vận chuyển</div>
+            <div onclick="GotoTypePagePoliCy('thanh-toan')" class="footer_home_item_link">Phương thức thanh toán</div>
+            <div onclick="GotoTypePagePoliCy('khach-hang-than-thiet')" class="footer_home_item_link">Chính sách khách hàng thân thiết</div>
+        </div>
+    </div>
+    <div style="width: 100%; justify-content: center; display: flex; margin-top: 20px;"><a href="https://www.facebook.com/AnQuocnT">Developed by Quốc An</a></div>
+</div>
+
+<div id="item_template" style="width: 100%; flex-direction: row; padding-bottom: 10px; margin-top: 10px; border-bottom: 1px solid #dcdcdc; display: flex;" hidden>
+    <img id="product_img" class='img_order' src=''>
+    <div class="item_order_content">
+        <div id="lbl_productName" style="color: #222; font-size: 16px;"></div>
+        <div id="lbl_productSize" style="color: #222; font-size: 16px;"></div>
+        <div style="margin-top: 10px;" class="product_detail_content_item_quantity">
+            <div class="product_detail_content_item_quantity_btn btn_quantityMinus">
+                -
+            </div>
+            <input readonly type="number" class="product_detail_content_item_quantity_input txt_quantityMobile" min="0" oninput="validity.valid||(value='')">
+            <div class="product_detail_content_item_quantity_btn btn_quantityPlus">
+                +
+            </div>
+        </div>
+        <div style="display: flex; width: 100%; justify-content: space-between;">
+            <div id="lbl_productPrice" style="color: #222; margin-top: 10px;">300,000đ</div>
+            <div class="btn_deleteMobile" style="color: #222; margin-top: 10px; text-decoration: underline; font-style: italic;">Xóa</div>
+        </div>
+    </div>
+</div>
+
+<!-- edit modal end-->
+
+<!-- modals end -->
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+g_listSize = []
+g_types = []
+g_showItem = false
+g_blog_pk = ''
+g_blog = null
+g_user = null
+g_orders = null
+g_products = null
+g_totalProduct = 0
+g_totalPrice = 0
+g_listOrderPk = []
+g_listQuantity = []
+
+$(document).ready(function () {
+    g_blog_pk = findGETParameter("pk")
+    GetTypeList()
+    GetUser()
+});
+
+function GetProductList() {
+    request_data = {
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/product/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchProductSuccess, genericFailCB)
+}
+
+function onSearchProductSuccess(res) {
+    var index = 1
+    g_products = res.objects
+    GetMyNewOrder()
+}
+
+function GetUser() 
+{
+    if(Cookies.get("token") == undefined) return
+    request_data = {
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/user/get'
+    ajaxRequest("POST", host_request, request_data, onGetUserSuccess, genericFailCB)
+}
+
+function onGetUserSuccess(res) {
+    g_user = res
+    GetProductList()
+}
+
+function GetMyNewOrder() 
+{
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "user_pk":g_user._id.$oid
+    }
+    host_request = gethost() + '/api/order/getMyNew'
+    ajaxRequest("POST", host_request, request_data, onGetMyNewOrderSuccess, genericFailCB)
+}
+
+function onGetMyNewOrderSuccess(res) {
+    g_listOrderPk = []
+    g_totalProduct = 0
+    g_totalPrice = 0
+    $('#result_table > tbody tr').remove()
+    $("#list_item_mobile").empty()
+    g_orders = res.objects
+    if(g_orders.length > 0){
+        $("#lbl_numberCart").removeAttr('hidden')
+        document.getElementById("lbl_numberCart").innerText = g_orders.length
+        $('.changeCart').css('background-color', '#ff4136');
+    }
+    else
+    {
+        showError("Bạn không có sản phẩm nào trong giỏ!")
+        $("#lbl_numberCart").hide()
+        $('.changeCart').css('background-color', '#000000');
+    }
+    for (i = 0; i < g_orders.length; i++) {
+        product = GetObjectByPk(g_products, g_orders[i].product_pk)
+        $('#result_table > tbody:last-child').append(genRow(g_orders[i], product))
+        $('#txt_quantity' + g_orders[i]._id.$oid).val(g_orders[i].quantity); 
+        let item_template = $("#item_template").clone()
+        item_template.removeAttr('hidden')
+        item_template.find("#product_img").attr("src",product.image)
+        item_template.find("#lbl_productName").html(product.product_name)
+        item_template.find("#lbl_productSize").html("Size: " + g_orders[i].size)
+        item_template.find("#lbl_productPrice").html((product.price * g_orders[i].quantity).toLocaleString() + "đ") 
+        let inputElement = item_template.find(".txt_quantityMobile");
+        inputElement.attr("id", "txt_quantityMobile" + g_orders[i]._id.$oid);
+        inputElement.val(g_orders[i].quantity)
+        divElementMinus = item_template.find(".btn_quantityMinus")
+        divElementMinus.attr("onclick", "QuantityMinus('" + g_orders[i]._id.$oid + "', '" + product.price + "')");
+        divElementPlus = item_template.find(".btn_quantityPlus")
+        divElementPlus.attr("onclick", "QuantityPlus('" + g_orders[i]._id.$oid + "', '" + product.price + "')");
+        divElementDelete = item_template.find(".btn_deleteMobile")
+        divElementDelete.attr("onclick", "DeleteOrder('" + g_orders[i]._id.$oid + "')");
+        $("#list_item_mobile").append(item_template)
+        g_listOrderPk.push(g_orders[i]._id.$oid)
+        g_listQuantity.push(g_orders[i].quantity)
+    }
+    $("#search_result").show()
+    ShowTotal()
+}
+
+function GetTypeList() {
+    request_data = {
+        "search_string": $("#txt_search").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/type/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchSuccess, genericFailCB)
+}
+
+function onSearchSuccess(res) {
+    var index = 1
+    g_types = res.objects
+    var parentElement = $('.nav_header_item_sub');
+    var parentElementSub = $('.list_sub_menu');
+    for (i = 0; i < g_types.length; i++) {
+        var newItem = $('<div>').addClass('nav_header_item_sub_item').text(g_types[i].name);
+        var newItemSub = $('<div>').addClass('item_sub_menu').text(g_types[i].name);
+        newItem.attr("onClick", 'GotoTypePage("' + g_types[i]._id.$oid + '")');
+        newItemSub.attr("onClick", 'GotoTypePage("' + g_types[i]._id.$oid + '")');
+        parentElement.append(newItem);
+        parentElementSub.append(newItemSub);
+    }
+}
+
+function genRow(order, product) {
+    var html = '<div style="margin:0 auto" class="product_detail_content_item_quantity">' +
+                    '<div onclick="QuantityMinus(\'' + order._id.$oid + '\', \'' + product.price + '\')" style="margin-top:0px" id="btn_quantityMinus" class="product_detail_content_item_quantity_btn">-</div>' +
+                    '<input style="margin-top:0px" type="number" id="txt_quantity' + order._id.$oid + '" class="product_detail_content_item_quantity_input" min="0" oninput="validity.valid||(value=\'\')">' +
+                    '<div onclick="QuantityPlus(\'' + order._id.$oid + '\', \'' + product.price + '\')" style="margin-top:0px" id="btn_quantityPlus" class="product_detail_content_item_quantity_btn">+</div>' +
+                '</div>';
+    row = '<tr class="trow" id="' + order._id.$oid + '">' +
+        "<td  style='cursor: pointer; vertical-align: middle;'><i class='fas fa-times' onclick='DeleteOrder(\"" + order._id.$oid + "\")'></i></td>" +
+        "<td style='cursor: pointer; vertical-align: middle;'><img class='img_order' src='" + product.image + "'></td>" +
+        "<td style='vertical-align: middle;'>" + order.product_name + "<br>" + "Size:" + order.size + "<br>" + "Màu:" + order.color + "</td>" +
+        "<td style='vertical-align: middle; text-align: center;'>" + product.price.toLocaleString() + "đ" + "</td>" +
+        "<td style='vertical-align: middle; text-align: center;'>" + html + "</td>" +
+        "<td id='orderPrice" + order._id.$oid + "' style='vertical-align: middle; text-align: center;'>" + (product.price * order.quantity).toLocaleString() + "đ" + "</td>" 
+        "</tr>"
+    g_totalProduct += order.quantity
+    g_totalPrice += product.price * order.quantity
+    return row
+}
+
+$("#my_account").click(function () {
+    window.location.href = "/login";
+});
+
+$("#btn_cart").click(function () {
+    window.location.href = "/cart";
+});
+
+
+$("#logo").click(function () {
+    window.location.href = "/";
+});
+
+$("#logo_center").click(function () {
+    window.location.href = "/";
+});
+
+$("#btn_blogs").click(function () {
+    window.location.href = "/blogs";
+});
+
+$("#btn_blogs_mobile").click(function () {
+    window.location.href = "/blogs";
+});
+
+$("#btn_bars").click(function () {
+    document.getElementById("mobile_overplay").style.visibility = "visible"
+    document.querySelector('.mobile_menu').classList.toggle('active');
+    document.querySelector('#mobile_overplay').classList.toggle('active');
+});
+
+$("#mobile_overplay").click(function () {
+    document.getElementById("mobile_overplay").style.visibility = "hidden"
+    document.querySelector('.mobile_menu').classList.toggle('active');
+    document.querySelector('#mobile_overplay').classList.toggle('active');
+});
+
+$("#btn_menuMobile_Home").click(function () {
+    window.location.href = "/";
+});
+
+$("#btn_showListItem").click(function () {
+    if(!g_showItem)
+    {
+        document.getElementById("changeIcon").classList.remove("fas", "fa-angle-down");
+        document.getElementById("changeIcon").classList.add("fas", "fa-times");
+        g_showItem = true
+    }else{
+        document.getElementById("changeIcon").classList.remove("fas", "fa-times");
+        document.getElementById("changeIcon").classList.add("fas", "fa-angle-down");
+        g_showItem = false
+    }
+    document.querySelector('.list_sub_menu').classList.toggle('active');
+});
+
+$("#btn_pay").click(function () {
+    if(g_listOrderPk.length == 0) return
+    request_data = {
+        "list_pk": JSON.stringify(g_listOrderPk),
+        "list_quantity" : JSON.stringify(g_listQuantity),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/order/updatePay'
+    ajaxRequest("POST", host_request, request_data, onUpdatePayOrderSuccess, genericFailCB)
+});
+
+function onUpdatePayOrderSuccess(res){
+    window.location = "/order_review"
+}
+
+
+function DeleteOrder(order_pk){
+    request_data = {
+        "pk": order_pk,
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/order/delete'
+    ajaxRequest("POST", host_request, request_data, onDeleteOrderSuccess, genericFailCB)
+}
+
+function onDeleteOrderSuccess(res){
+    showNotice('Xóa đơn hàng thành công')
+    GetMyNewOrder()
+}
+
+function GotoTypePage(subject_pk)
+{
+    g_subject_pk = subject_pk
+    window.location = "/type/?pk=" + subject_pk
+}
+
+function GotoTypePagePoliCy(name)
+{
+    window.location = "/policy/?name=" + name
+}
+
+function QuantityMinus(id, price){
+    quantity = parseInt($('#txt_quantity' + id).val())
+    if(quantity == 1) return
+    g_totalProduct -= 1
+    g_totalPrice -= parseInt(price)
+    $('#txt_quantity' + id).val(quantity - 1)
+    $('#txt_quantityMobile' + id).val(quantity - 1)
+    document.getElementById('orderPrice' + id).innerText = (parseInt(price) * (quantity - 1)).toLocaleString() + "đ"
+    index = g_listOrderPk.indexOf(id)
+    g_listQuantity[index]--
+    ShowTotal()
+}
+
+function QuantityPlus(id, price){
+    quantity = parseInt($('#txt_quantity' + id).val())
+    g_totalProduct += 1
+    g_totalPrice += parseInt(price)
+    $('#txt_quantity' + id).val(quantity + 1)
+    $('#txt_quantityMobile' + id).val(quantity + 1)
+    document.getElementById('orderPrice' + id).innerText = (parseInt(price) * (quantity + 1)).toLocaleString() + "đ"
+    index = g_listOrderPk.indexOf(id)
+    g_listQuantity[index]++
+    ShowTotal()
+}
+
+function ShowTotal(){
+    document.getElementById("totalProduct").innerText = g_totalProduct + " sản phẩm"
+    document.getElementById("totalPrice1").innerText = g_totalPrice.toLocaleString() + "đ"
+    document.getElementById("totalPrice2").innerText = g_totalPrice.toLocaleString() + "đ"
+}
+
+function GotoCartPage(name)
+{
+    if(g_user == null){
+        showError("Bạn chưa đăng nhập")
+        setTimeout(function() {
+            window.location.href = "/login";
+        }, 1500)
+        return
+    }
+    window.location.href = "/cart";
+}
+
+</script>
+
+{% endblock %}

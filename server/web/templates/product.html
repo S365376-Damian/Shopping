@@ -1,0 +1,727 @@
+{% extends 'base_dashtreme.html' %}
+{% block head %}
+<title>Danh sách sản phẩm</title>
+{% endblock %}
+{% block body %}
+<style>
+    .select2-container{
+        width: 100% !important;
+    }
+    .select2-selection--multiple{
+        background-color: #01629d !important;
+        border: 1px solid #49a5f5 !important;
+    }
+    .select2-results__option{
+        background-color: #3ea2e0;
+        border: 1px solid #ffffff !important;
+    }
+    .select2-results__option--selected{
+        background-color: #01629d !important;
+        border: 1px solid #ffffff !important;
+    }
+    .select2-selection__choice{
+        background-color: #01629d !important;
+    }
+
+</style>
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">Danh sách sản phẩm
+                <div class="row" style="padding:10px 0 0 10px">
+                    <!-- <div class="form-group col-md-3">
+                        <input type="text" placeholder="name" name="text" id="txt_search" class="form-control "> 
+                    </div>                 -->
+                    <!-- <div class="">
+                        <button id ="btn_search" class="btn btn-primary btn-default">
+                            <i class="fas fa-search"></i> Tìm kiếm</button>
+                    </div> -->
+                    <div class="col-md-2">
+                        <button id ="btn_showModal" class="btn btn-primary btn-default">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Thêm sản phẩm</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover" id="result_table">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Mã</th>
+                            <th>Tên</th>
+                            <th>Giá</th>
+                            <th>Size</th>
+                            <th>Nhóm</th>
+                            <th>Loại</th>
+                            <th>Chất liệu</th>
+                            <th>Màu sắc</th>
+                            <th>Mô tả</th>
+                            <th>Ngày cập nhật</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div><!--End Row-->
+
+
+<!-- modals -->
+
+<!-- edit modal-->
+<div class="modal fade" id="modal_product" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content panel-yellow">
+            <div class="modal-header panel-heading">                
+                <h4 class="modal-title" id="lbl_modal_title">Cập nhật sản phẩm</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body panel-body" style="max-height: 900px; overflow-y: scroll;">
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Mã </label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-barcode"></i> </span>
+                            <input type="text" class="form-control" id="txt_code">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Tên </label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-user"></i> </span>
+                            <input type="text" class="form-control" id="txt_name">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Giá</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fa fa-money-bill"></i></span>
+                            <input type="number" class="form-control" id="txt_price">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Size</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-sitemap"></i></span>
+                            <select class="form-control select2" id="cb_size"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Nhóm</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-layer-group"></i></span>
+                            <select class="form-control" id="cb_group"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Loại</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-text-height"></i></span>
+                            <select class="form-control select2" id="cb_type"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Chất liệu</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-pump-soap"></i></span>
+                            <select class="form-control select2" id="cb_material"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Màu sắc</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-tint"></i></span>
+                            <input type="text" class="form-control" id="txt_color" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-3" style="display: flex; align-items: center;">
+                        <button id="div_addColor" class="btn btn-default btn-success"><span class="fa fa-plus"><span>
+                            Thêm màu</button>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-4" style="padding-left: 0px; display: flex; align-items: center;">
+                        <button id="div_deleteColor" class="btn btn-default btn-danger"><span class="fa fa-trash"><span>
+                            Xóa màu</button>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Mô tả</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-audio-description"></i></span>
+                            <textarea id="txt_describe" class="form-control" name="story"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Cho đồng kiểm</label>
+                    </div>
+                    <div class="col-md-9">
+                        <label class="switch">
+                            <input id="rd_check" type="checkbox">
+                        </label>             
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Ảnh</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <table class="table table-bordered" id="table_image">
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                    <div class="pull-right">
+                        <button id="btn_image" class="btn btn-default btn-success"><span class="fa fa-product"><span>
+                            Thêm ảnh</button>
+                        <button id="btn_update" class="btn btn-default btn-success"><span class="fa fa-save"><span>
+                                Cập nhật</button>
+                        <button id="btn_delete" class="btn btn-default btn-danger"><span class="fa fa-trash"><span>
+                                Xóa</button>
+                        </div>
+                    </div>
+                </div>
+                <label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file" hidden>
+                    <input type="file" class="sr-only" id="inputImage" name="file" accept="image/*">                            
+                    <span class="fa fa-upload"></span>                            
+                </label>
+            </div> <!-- end modal body-->
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_addColor" role="dialog" style="width: 400px;">
+    <div style="width: 400px;" class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header panel-heading">                
+                <h4 class="modal-title" id="lbl_modal_title">Chỉnh sửa màu</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body panel-body">
+                <div class="row form-group">
+                    <div class="col-md-1">
+                        <label>Màu </label>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-tint"></i> </span>
+                            <input type="text" class="form-control" id="txt_colorPresent">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9">
+                    <div class="pull-right">
+                        <button id="btn_addColor" class="btn btn-default btn-success"><span class="fa fa-product"><span>
+                            Thêm</button>
+                        <button id="btn_deleteColor" style="display: none;" class="btn btn-default btn-danger"><span class="fa fa-product"><span>
+                            Xóa</button>
+                        </div>
+                    </div>
+                </div>
+                <label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file" hidden>
+                    <input type="file" class="sr-only" id="inputImage" name="file" accept="image/*">                            
+                    <span class="fa fa-upload"></span>                            
+                </label>
+            </div> <!-- end modal body-->
+        </div>
+    </div>
+</div>
+
+<div id="img_template" class="col-lg-2 col-md-3 col-sm-3 col-xs-6" hidden>
+    <a id="link_image" href="" data-sub-html="">
+        <img id="img_thumbnail" class="img-responsive thumbnail" src="">
+    </a>
+</div>
+
+<!-- edit modal end-->
+
+<!-- modals end -->
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+g_servicePack = ""
+g_purpose = ""
+g_level = "{{level}}"
+g_products = null
+g_product = null
+g_productPk = null
+g_status = true
+g_imgProduct = ""
+g_colorPresent = ""
+
+$(document).ready(function () {
+    $('.select2').select2({multiple: true});
+    $('#div_startOffProduct').hide()
+    $('#div_endOffProduct').hide()
+    GetProductList()
+    GetMaterialList()
+    $('#cb_size').append($("<option></option>").attr("value", "S").text("S"));
+    $('#cb_size').append($("<option></option>").attr("value", "M").text("M"));
+    $('#cb_size').append($("<option></option>").attr("value", "L").text("L"));
+    $('#cb_size').append($("<option></option>").attr("value", "XL").text("XL"));
+    $('#cb_size').append($("<option></option>").attr("value", "XXL").text("XXL"));
+    
+    $('#cb_group').append($("<option></option>").attr("value", "").text(""));
+    $('#cb_group').append($("<option></option>").attr("value", "Nam").text("Thời trang nam"));
+    $('#cb_group').append($("<option></option>").attr("value", "Nữ").text("Thời trang nữ"));
+    $('#cb_group').append($("<option></option>").attr("value", "Đôi").text("Thời trang cặp đôi"));
+
+    GetTypeList()
+
+});
+
+$("#btn_search").click(function () {
+    GetProductList()
+});
+
+$("#btn_image").click(function () {
+    $("#inputImage").click()
+});
+
+$("#table_image").on("click", "#btn_remove", function() {
+    $(this).closest("tr").remove();
+    CountImage()
+});
+
+function ConvertImageToBase64()
+{
+    var table = document.getElementById('table_image');   
+    var rowLength = table.rows.length;
+    base64_string = ""
+    for(var i=0; i<rowLength; i++)
+    {
+        var row = table.rows[i];
+        cell = row.cells[0]
+        img = cell.childNodes[2]
+        
+        base64_string += ResizeImage(img, 800) + "|"
+    }
+
+    return base64_string
+}
+
+$("#inputImage").on('change', function(e){
+    if (this.files && this.files[0]) 
+    {    
+        //load image to canvas
+        var URL = window.URL;
+        var url = URL.createObjectURL(e.target.files[0]);
+
+        $('#table_image > tbody:last-child').append(genImageRow(url))
+        //convert image to base64
+        var FR= new FileReader();
+        FR.addEventListener("load", function(ee) 
+        {
+            g_base64_string = ee.target.result
+        }); 
+        
+        FR.readAsDataURL( this.files[0] );
+
+        CountImage()
+    }
+})
+
+function genImageRow(url)
+{
+    row = '<tr class="trow" style="margin-top: 10px" id="">' +
+        '<td style="padding: 0px; ">' +        
+        '<button style="position: relative" id="btn_remove" class="btn btn-primary btn-danger pull-right btn-remove-row"> X</button>' +
+        '<img class="img-thumbnail img_thumbnail" src="' + url + '"/>' +
+        '<img hidden class="img_issue" src="' + url + '"/>' +
+        '</td>' +
+        '</tr>'
+    return row
+}
+
+function CountImage()
+{
+    //var rowCount = $('#table_image tr').length;
+    //document.getElementById("btn_confirm").disabled = rowCount == 0
+}
+
+
+function GetTypeList() {
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "level": g_level,
+        "search_string": $("#txt_search").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/type/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchTypeSuccess, genericFailCB)
+}
+
+function onSearchTypeSuccess(res) {
+    var index = 1
+    g_types = res.objects
+    for (i = 0; i < g_types.length; i++) {
+        $('#cb_type').append($("<option></option>").attr("value", g_types[i].name).text(g_types[i].name));
+    }
+}
+
+function GetMaterialList() {
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "level": g_level,
+        "search_string": $("#txt_search").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/material/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchMaterialSuccess, genericFailCB)
+}
+
+function onSearchMaterialSuccess(res) {
+    var index = 1
+    g_materials = res.objects
+    for (i = 0; i < g_materials.length; i++) {
+        $('#cb_material').append($("<option></option>").attr("value", g_materials[i].name).text(g_materials[i].name));
+    }
+}
+
+function GetProductList() {
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/product/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchSuccess, genericFailCB)
+}
+
+function onSearchSuccess(res) {
+    var index = 1
+    g_products = res.objects
+    if(g_products.length == 0)
+    {
+        ShowToast("Không tìm thấy product")
+    }
+    for (i = 0; i < g_products.length; i++) {
+        $('#result_table > tbody:last-child').append(genRow(g_products[i], index++))
+    }
+    $("#search_result").show()
+}
+
+function genRow(product, order) {
+    group = ""
+    if(product.group == "Nam")
+        group = "Thời trang nam"
+    if(product.group == "Nữ")
+        group = "Thời trang nữ"
+    if(product.group == "Đôi")
+        group = "Thời trang cặp đôi"
+    row = '<tr class="trow" id="' + product._id.$oid + '">' +
+        "<td>" + order + "</td>" +
+        "<td>" + product.product_code + "</td>" +
+        "<td>" + product.product_name + "</td>" +
+        "<td>" + product.price + "</td>" +
+        "<td>" + product.size + "</td>" +
+        "<td>" + group + "</td>" +
+        "<td style='max-width:250px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>" + product.type + "</td>" +
+        "<td>" + product.material + "</td>" +
+        "<td>" + product.color + "</td>" +
+        "<td style='max-width:250px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>" + product.describe + "</td>" +
+        "<td>" + datetimeConverter(product.dateUpdate.$date) + "</td>" +
+        "</tr>"
+    return row
+}
+
+$("#result_table").on("click", "tbody tr", function (event) {
+    $("#txt_startOff").val("")
+    $("#txt_endOff").val("")
+    document.getElementById("btn_update").innerText = "Cập nhật sản phẩm"
+    document.getElementById("lbl_modal_title").innerText = "Cập nhật sản phẩm"
+    //handle row click
+    g_product = GetObjectByPk(g_products, this.id)
+    g_productPk = g_product._id.$oid
+    if(g_product.image)
+    {
+        document.getElementById("btn_image").innerText = "Đổi ảnh"
+        g_imgProduct = g_product.image
+        $("#img_product").show();
+    }
+    else
+    {
+        document.getElementById("btn_image").innerText = "Thêm ảnh"
+        $("#img_product").hide();
+    }
+    $("#img_product").attr("src", g_imgProduct);
+    $("#txt_code").val(g_product.product_code)
+    $("#txt_name").val(g_product.product_name)
+    $("#txt_price").val(g_product.price)
+    $("#cb_size").val(g_product.size.split(', ')).trigger('change.select2');
+    $("#cb_group").val(g_product.group)
+    $("#cb_type").val(g_product.type.split(', ')).trigger('change.select2');
+    $("#cb_material").val(g_product.material.split(', ')).trigger('change.select2');
+    $("#txt_material").val(g_product.material)
+    $("#txt_color").val(g_product.color)
+    $("#txt_describe").val(g_product.describe)
+    document.getElementById("rd_check").checked = g_product.check
+    $("#btn_update").show()
+    $("#btn_delete").show()
+    $("#table_image > tbody").empty();
+    if(g_product.imagePaths != null && g_product.imagePaths.length > 0)
+        {
+            for(j = 0; j < g_product.imagePaths.length; j++)
+            {   
+                imgPath = g_product.imagePaths[j]
+                if(imgPath.includes('product'))
+                {
+                    $('#table_image > tbody:last-child').append(genImageRow("/media/" + imgPath))
+                }
+                else
+                {
+                    $('#table_image > tbody:last-child').append(genImageRow("/media/" + g_product.imageDir + "/" + imgPath))
+                }
+            }
+        }
+    
+    $("#modal_product").modal()
+});
+
+$("#btn_showModal").click(function () {
+    $("#img_product").hide();
+    $("#txt_code").val('')
+    $("#txt_name").val('')
+    $("#txt_price").val('')
+    $("#cb_size").val([]).trigger('change.select2');
+    $("#cb_group").val("")
+    $("#cb_type").val([]).trigger('change.select2');
+    $("#cb_material").val([]).trigger('change.select2');
+    $("#txt_material").val('')
+    $("#txt_color").val('')
+    $("#txt_describe").val('')
+    document.getElementById("rd_check").checked = false
+    g_productPk = null
+    g_imgProduct = ""
+    document.getElementById("btn_image").innerText = "Thêm ảnh"
+    $("#btn_delete").hide()
+    $("#modal_product").modal()
+    document.getElementById("btn_update").innerText = "Thêm sản phẩm"
+    document.getElementById("lbl_modal_title").innerText = "Thêm sản phẩm"
+})
+
+$("#btn_update").click(function () {
+    if(!CheckRequreField()) return
+    request_data = {
+        "pk" : g_productPk,
+        "product_code": $("#txt_code").val(),
+        "product_name": $("#txt_name").val(),
+        "price": $("#txt_price").val(),
+        "size": $("#cb_size").val().join(', '),
+        "group": $("#cb_group").val(),
+        "type": $("#cb_type").val().join(', '),
+        "material": $("#cb_material").val().join(', '),
+        "color": $("#txt_color").val(),
+        "describe": $("#txt_describe").val(),
+        "imageBase64" : ConvertImageToBase64(),
+        "image": "",
+        "check" : document.getElementById("rd_check").checked ? "True" : "False",
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/product/update'
+    ajaxRequest("POST", host_request, request_data, onEditSuccess, genericFailCB)
+});
+
+function onEditSuccess(res) {
+    // document.getElementById("frm_edit").reset();
+    $("#modal_product").modal('hide')
+    $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetProductList()
+}
+
+$("#div_addColor").click(function () {
+    $("#txt_colorPresent").val('')
+    $("#modal_addColor").modal()
+    $("#btn_addColor").show()
+    $("#btn_deleteColor").hide()
+})
+
+$("#div_deleteColor").click(function () {
+    $("#txt_colorPresent").val('')
+    $("#modal_addColor").modal()
+    $("#btn_addColor").hide()
+    $("#btn_deleteColor").show()
+})
+
+$("#btn_addColor").click(function () {
+    var newValue = $("#txt_colorPresent").val().charAt(0).toUpperCase() + $("#txt_colorPresent").val().slice(1)
+    var currentColorValue = $("#txt_color").val();
+    if(newValue == ""){
+        showError('Bạn chưa nhập màu')
+        return
+    }
+    if(currentColorValue == "")
+    {
+        currentColorValue += newValue;
+    }
+    else
+    {
+        currentColorValue += ", " + newValue;
+    }
+    
+    $("#txt_color").val(currentColorValue);
+    $("#modal_addColor").modal('hide')
+})
+
+$('#modal_addColor').on('hidden.bs.modal', function () {
+    document.body.classList.add('modal-open');
+});
+
+$("#btn_deleteColor").click(function () {
+    var newValue = $("#txt_colorPresent").val().charAt(0).toUpperCase() + $("#txt_colorPresent").val().slice(1)
+    var currentColorValue = $("#txt_color").val();
+    if(newValue == ""){
+        showError('Bạn chưa nhập màu')
+        return
+    }
+    if(currentColorValue.includes(newValue)){
+        currentColorValue = currentColorValue.replace(", " + newValue, "");
+        currentColorValue = currentColorValue.replace(newValue, "");
+        $("#txt_color").val(currentColorValue);
+        $("#modal_addColor").modal('hide')
+    }
+    else
+    {
+        showError("Không có màu " + newValue + " trong danh sách!")
+    }
+})
+
+function CheckRequreField()
+{
+    if($("#txt_code").val() == "")
+    {
+        showError("Chưa nhập mã sản phẩm")
+        return false
+    }
+
+    if($("#txt_name").val() == "")
+    {
+        showError("Chưa nhập tên sản phấm")
+        return false
+    }
+
+    if($("#txt_price").val() == "")
+    {
+        showError("Chưa nhập giá sản phẩm")
+        return false
+    }
+
+    if($("#cb_type").val() == null)
+    {
+        showError("Chưa chọn loại sản phẩm")
+        return false
+    }
+
+    if($("#cb_size").val() == null)
+    {
+        showError("Chưa chọn size sản phẩm")
+        return false
+    }
+
+    if($("#cb_material").val() == null)
+    {
+        showError("Chưa chọn chất liệu sản phẩm")
+        return false
+    }
+
+    return true
+}
+
+$("#btn_delete").click(function () {
+    request_data = {
+        "pk" : g_productPk,
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + "/api/product/delete"
+    ajaxRequest("POST", host_request, request_data, onDeleteSuccess, genericFailCB);
+})
+
+function onDeleteSuccess(res) {
+    // document.getElementById("frm_edit").reset();
+    $("#modal_product").modal('hide')
+    $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetProductList()
+}
+
+function ResizeImage(img, maxWidth)
+{
+    newWidth = img.width
+    newHeight = img.height
+
+    
+    if(img.width > maxWidth)
+    {
+        newWidth = maxWidth
+        newHeight = ((img.height * maxWidth ) / img.width)
+    }
+
+    // create an off-screen canvas
+    var canvas = document.createElement('canvas'),
+    ctx = canvas.getContext('2d');
+
+    // set its dimension to target size
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+
+    // draw source image into the off-screen canvas:
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    // encode image to data-uri with base64 version of compressed image
+    return canvas.toDataURL('image/jpeg', 0.9);
+}
+
+
+</script>
+
+{% endblock %}

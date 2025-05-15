@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <meta property="og:image" content="/static/img/logo.jpg">
+  <meta name="google-signin-client_id" content="425541939993-4ci4i8ab26tv7jc2bg794iepca34qob7.apps.googleusercontent.com">
+  {% block head %}
+  <title>Base</title>
+  {% endblock %}
+  <!--favicon-->
+  {% if debug %}     
+    <link rel="shortcut icon" type="image/x-icon" href="/static/img/logo.ico" >
+  {% else %}        
+    <link rel="shortcut icon" type="image/x-icon" href="/static/img/logo.ico" >
+  {% endif %}
+  <!-- Custom Fonts -->        
+  <link href="/static/fontawesome/v5.15.3/css/all.css" rel="stylesheet" >
+  <!-- Bootstrap core CSS-->
+  <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- animate CSS-->
+  <link href="/static/assets/css/animate.css" rel="stylesheet" type="text/css" />
+  <!-- Custom CSS -->
+  <link href="/static/css/modal-panel.css" rel="stylesheet">
+  <!-- Custom Style-->
+  <link href="/static/assets/css/app-style.css" rel="stylesheet" />
+  <!-- Sweetalert Css -->
+  <link href="/static/sweetalert/sweetalert.css" rel="stylesheet" />
+  <!-- toast animation-->
+  <link href="/static/css/animate.min.css" rel="stylesheet">
+  <link href="/static/splide-4.1.3/dist/css/splide.min.css" rel="stylesheet">
+</head>
+
+<body class="wrapper">
+
+  <!-- start loader -->
+  <div id="pageloader-overlay" class="visible incoming">
+  <div class="loader-wrapper-outer">
+    <div class="loader-wrapper-inner">
+    <div class="loader"></div>
+    </div>
+  </div>
+  </div>
+  <!-- end loader -->
+
+  <div style="height: 100%; position: relative;">
+  {% block body %}
+  {% endblock %}
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <!-- <script src="/static/assets/js/jquery.min.js"></script> -->
+  <script src="/static/vendor/jquery/jquery.min.js"></script>
+  <script src="/static/assets/js/popper.min.js"></script>
+  <script src="/static/assets/js/bootstrap.min.js"></script>
+
+  <!-- sidebar-menu js -->
+  <script src="/static/assets/js/sidebar-menu.js"></script>
+
+  <!-- Custom scripts -->
+  <script src="/static/assets/js/app-script.js"></script>
+  <script src="/static/js/modal-panel.js"></script>
+  <script src="/static/js/js.cookie.js"></script>
+  <script src="/static/js/tgmt_image.js"></script>
+  <script src="/static/js/raspango.js"></script>
+  <!-- SweetAlert Plugin Js -->
+  <script src="/static/sweetalert/sweetalert.min.js"></script>
+  <!-- toast -->
+  <script src="/static/js/bootstrap-notify.min.js"></script>
+  <script src="/static/splide-4.1.3/dist/js/splide.min.js"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script>
+    $(document).keyup(function(e) {
+      if (e.key === "Escape") { 
+        $(".modal").modal('hide')
+      }
+    });
+
+    $( document ).ready(function() {
+      sethost("{{request.META.HTTP_HOST}}")
+
+      $('#dismiss, .overlay').on('click', function () {
+        HideSidebar()
+      });
+
+      $('#sidebarCollapse').on('click', function () {
+        if($('#sidebar').hasClass('active'))
+          HideSidebar()
+        else
+          ShowSidebar()
+      });
+
+      function ShowSidebar()
+      {
+        $('#sidebar').addClass('active');
+        $('.overlay').addClass('active');
+        $('.collapse.in').toggleClass('in');
+        $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+      }
+
+      function HideSidebar()
+      {
+        $('#sidebar').removeClass('active');
+        $('.overlay').removeClass('active');
+      }
+
+      //ShowTotalNotification()
+
+      function ShowTotalNotification()
+      {
+        if(Cookies.get("token") == null || Cookies.get("token") == "")
+          return
+        request_data = {
+              "token": Cookies.get("token"),
+              "status" : "unseen"
+            }
+    
+        host_request = gethost() + '/api/notification/getList'
+        ajaxRequest("POST", host_request, request_data, onGetNotificationSuccess, null)
+      }
+
+      function onGetNotificationSuccess(res)
+      {        
+        document.getElementById("lbl_numNotification").innerText = res.length
+      }
+    });
+
+  </script>
+</body>
+{% block scripts %}
+<script></script>
+{% endblock %}
+</html>

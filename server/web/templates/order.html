@@ -1,0 +1,302 @@
+{% extends 'base_dashtreme.html' %}
+{% block head %}
+<title>Danh sách đơn hàng</title>
+{% endblock %}
+{% block body %}
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">Danh sách đơn hàng
+                <div class="row" style="padding:10px 0 0 10px">
+                    <div class="form-group col-md-3">
+                        <input type="text" placeholder="Tên đơn hàng" name="text" id='txt_search' class="form-control "> 
+                    </div>                
+                    <div class="col-md-2">
+                        <button id ="btn_search" class="btn btn-primary btn-default">
+                            <i class="fas fa-search"></i> Tìm kiếm</button>
+                    </div>
+                    <div class="col-md-2">
+                        <button id ="btn_showModal" class="btn btn-primary btn-success">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Thêm đơn hàng</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover" id="result_table">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên Khách</th>
+                            <th>SĐT</th>
+                            <th style="max-width: 200px; overflow: hidden;">Địa chỉ</th>
+                            <th style="max-width: 200px; overflow: hidden;">Tên Sản Phẩm</th>
+                            <th>SIZE</th>
+                            <th>Số Lượng</th>
+                            <th>Đơn Giá</th>
+                            <th>Thành Tiền</th>
+                            <th>Trạng Thái</th>
+                            <th>Ngày update</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div><!--End Row-->
+
+
+<!-- modals -->
+
+<!-- edit modal-->
+<div class="modal fade" id="modal_order" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content panel-yellow">
+            <div class="modal-header panel-heading">                
+                <h4 class="modal-title" id="lbl_modal_title">Cập nhật đơn hàng</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body panel-body">
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Tên khách</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control" id="txt_nameUser">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>SĐT</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-phone"></i></span>
+                            <input type="email" class="form-control" id="txt_phoneUser">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Tên Sản Phẩm</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-user"></i></span>
+                            <input type="email" class="form-control" id="txt_nameProduct">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Thành Tiền</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-money-bill-wave-alt"></i></span>
+                            <input type="number" class="form-control" id="txt_totalPrice">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Ghi chú</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-comment-alt"></i></span>
+                            <input type="text" class="form-control" id="txt_note">
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_update" class="btn btn-default btn-success"><span class="fa fa-save"><span>Cập nhật</button>
+                <button id="btn_delete" class="btn btn-default btn-danger pull-right" style="display: none;"><span class="fa fa-trash"><span>Xóa</button>
+            </div> <!-- end modal body-->
+        </div>
+    </div>
+</div>
+
+<!-- edit modal end-->
+
+<!-- modals end -->
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+g_level = "{{level}}"
+g_orders = null
+g_order = null
+g_order_pk = null
+
+
+$(document).ready(function () {
+    GetOrderList()
+});
+
+$("#btn_search").click(function () { 
+    GetOrderList()
+});
+
+
+function GetOrderList() {
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "search_string": $("#txt_search").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/order/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchSuccess, genericFailCB)
+}
+
+function onSearchSuccess(res) {
+    var index = 1
+    g_orders = res.objects
+    if(g_orders.length == 0)
+    {
+        ShowToast("Chưa có order nào")
+    }
+    for (i = 0; i < g_orders.length; i++) {
+        $('#result_table > tbody:last-child').append(genRow(g_orders[i], index++))
+    }
+    $("#search_result").show()
+}
+
+function genRow(order, index) {
+    status = "Đang giao"
+    if(order.status == 'Waiting') status = "Chờ xác nhận"
+    else if(order.status == 'Completed') status = "Hoàn thành"
+    row = '<tr class="trow" id="' + order._id.$oid + '">' +
+        "<td>" + index + "</td>" +
+        "<td>" + order.user_name + "</td>" +
+        "<td>" + order.user_phone + "</td>" +
+        "<td style='max-width: 200px; overflow: hidden;'>" + order.address + "</td>" +
+        "<td style='max-width: 200px; overflow: hidden;'>" + order.product_name + "</td>" +
+        "<td>" + order.size + "</td>" +
+        "<td>" + order.quantity + "</td>" +
+        "<td>" + (order.price / order.quantity).toLocaleString() + "đ" + "</td>" +
+        "<td>" + order.price.toLocaleString() + "đ" + "</td>" +
+        "<td>" + status + "</td>" +
+        "<td>" + datetimeConverter(order.timeUpdate.$date) + "</td>" +
+        "</tr>"
+    return row
+}
+
+$("#result_table").on("click", "tbody tr", function (event) {
+    //handle row click
+
+    g_order = GetObjectByPk(g_orders, this.id)
+    if(g_order.status == 'Waiting'){
+        document.getElementById("btn_update").innerText = "Xác nhận"
+        document.getElementById("lbl_modal_title").innerText = "Xác nhận đơn hàng"
+    }
+    else{
+        document.getElementById("btn_update").innerText = "Hoàn tất"
+        document.getElementById("lbl_modal_title").innerText = "Hoàn tất đơn hàng"
+    }
+    if (g_order == null) {
+        showError("Không lấy được thông tin order, vui lòng tìm kiếm lại!")
+        return
+    }
+    console.log(g_order.note)
+    $("#txt_nameUser").val(g_order.user_name)
+    $("#txt_phoneUser").val(g_order.user_phone)
+    $("#txt_nameProduct").val(g_order.product_name)
+    $("#txt_totalPrice").val(g_order.price)
+    $("#txt_note").val(g_order.note)
+
+    g_order_pk = g_order._id.$oid
+    $("#btn_update").show()
+    $("#btn_delete").show()
+    //Show modal
+    $("#modal_order").modal()
+});
+
+
+$("#btn_showModal").click(function () {
+    g_order_pk = null
+    document.getElementById("lbl_modal_title").innerText = "Tạo order"
+    document.getElementById("btn_update").innerText = "Lưu order"
+    $("#btn_delete").hide()
+    $("#modal_order").modal()
+    $("#txt_nameUser").val('')
+    $("#txt_phoneUser").val("")
+    $("#txt_nameProduct").val("")
+    $("#txt_totalPrice").val("")
+    $("#txt_note").val("")
+})
+
+$("#btn_update").click(function () {
+    request_data = {
+        "pk" : g_order_pk,
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/order/completed'
+    if(g_order.status == 'Waiting')
+        host_request = gethost() + '/api/order/buy'
+    ajaxRequest("POST", host_request, request_data, onBuySuccess, genericFailCB)
+});
+
+function onBuySuccess(res) {
+    $("#modal_order").modal('hide')
+    $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetOrderList()
+}
+
+function CheckRequreField()
+{
+    if(document.getElementById("rd_%").checked && parseInt($("#txt_value").val()) > 100)
+    {
+        showError("% giảm giá phải nhỏ hơn 100%")
+        return false
+    }
+
+    if($("#txt_name").val() == "")
+    {
+        showError("Chưa nhập tên")
+        return false
+    }
+
+    if($("#txt_code").val() == "")
+    {
+        showError("Chưa nhập mã")
+        return false
+    }
+
+    if($("#txt_value").val() == "")
+    {
+        showError("Chưa nhập giá trị")
+        return false
+    }
+
+    return true
+}
+
+$("#btn_delete").click(function () {
+    request_data = {
+        "pk": g_order_pk,
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + "/api/order/delete"
+    ajaxRequest("POST", host_request, request_data, updateSuccessAndClose, genericFailCB);
+})
+
+function updateSuccessAndClose(res) {
+    $("#modal_order").modal('hide')
+    $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetOrderList()
+}
+
+
+</script>
+
+{% endblock %}

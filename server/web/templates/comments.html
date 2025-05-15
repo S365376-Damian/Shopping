@@ -1,0 +1,196 @@
+{% extends 'base_dashtreme.html' %}
+{% block head %}
+<title>Danh sách ý kiến</title>
+{% endblock %}
+{% block body %}
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">Danh sách ý kiến
+                <div class="row" style="padding:10px 0 0 10px">
+                    <div class="form-group col-md-3">
+                        <input type="text" placeholder="Name" name="text" id='txt_search' class="form-control "> 
+                    </div>                
+                    <div class="col-md-2">
+                        <button id ="btn_search" class="btn btn-primary btn-default">
+                            <i class="fas fa-search"></i> Tìm kiếm</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover" id="result_table">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Người thực hiện</th>
+                            <th>Nội dung</th>
+                            <th>Ngày cập nhật</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div><!--End Row-->
+
+
+<!-- modals -->
+
+<!-- edit modal-->
+<div class="modal fade" id="modal_comment" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content panel-yellow">
+            <div class="modal-header panel-heading">                
+                <h4 class="modal-title" id="lbl_modal_title">Cập nhật ý kiến</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body panel-body">
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Người thực hiện</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control" id="txt_user">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Nội dụng</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-comment"></i></span>
+                            <textarea class="form-control" id="txt_content"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_delete" class="btn btn-default btn-danger pull-right" style="display: none;"><span class="fa fa-trash"><span>Xóa</button>
+            </div> <!-- end modal body-->
+        </div>
+    </div>
+</div>
+
+<!-- edit modal end-->
+
+<!-- modals end -->
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+g_servicePack = ""
+g_purpose = ""
+g_level = "{{level}}"
+g_comments = null
+g_comment = null
+g_commentPk = null
+
+
+$(document).ready(function () {
+    GetCommentList()
+});
+
+$("#btn_search").click(function () { 
+    GetCommentList()
+});
+
+
+function GetCommentList() {
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "level": g_level,
+        "search_string": $("#txt_search").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/comment/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchSuccess, genericFailCB)
+}
+
+function onSearchSuccess(res) {
+    var index = 1
+    g_comments = res.objects
+    if(g_comments.length == 0)
+    {
+        ShowToast("Chưa có bình luận nào")
+    }
+    for (i = 0; i < g_comments.length; i++) {
+        $('#result_table > tbody:last-child').append(genRow(g_comments[i], index++))
+    }
+    $("#search_result").show()
+}
+
+function genRow(comment, order) {
+    row = '<tr class="trow" id="' + comment._id.$oid + '">' +
+        "<td>" + order + "</td>" +
+        "<td>" + comment.user_name + "</td>" +
+        "<td>" + comment.content + "</td>" +
+        "<td>" + datetimeConverter(comment.timeUpdate.$date) + "</td>" +
+        "</tr>"
+    return row
+}
+
+$("#result_table").on("click", "tbody tr", function (event) {
+    //handle row click
+
+    g_comment = GetObjectByPk(g_comments, this.id)
+    document.getElementById("lbl_modal_title").innerText = "Chi tiết bình luận"
+
+    g_commentPk = g_comment._id.$oid
+    $("#btn_delete").show()
+
+    if (g_comment == null) {
+        showError("Không lấy được thông tin bình luận, vui lòng tìm kiếm lại!")
+        return
+    }
+    $("#txt_user").val(g_comment.user_name)
+    $("#txt_content").val(g_comment.content)
+    $("#modal_comment").modal()
+});
+
+function onEditSuccess(res) {
+    $("#modal_comment").modal('hide')
+    $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetCommentList()
+}
+
+function CheckRequreField()
+{
+    if($("#txt_name").val() == "")
+    {
+        showError("Chưa nhập tên loại")
+        return false
+    }
+
+    return true
+}
+
+$("#btn_delete").click(function () {
+    request_data = {
+        "pk": g_commentPk,
+        "level": g_level,
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + "/api/comment/delete"
+    ajaxRequest("POST", host_request, request_data, updateSuccessAndClose, genericFailCB);
+})
+
+function updateSuccessAndClose(res) {
+    $("#modal_comment").modal('hide')
+    $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetCommentList()
+}
+
+</script>
+
+{% endblock %}

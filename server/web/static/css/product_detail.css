@@ -1,0 +1,129 @@
+.login_list_progress{
+    display: flex;
+    background-color: #fafafa;
+    padding: 8px 64px;
+    color:#222;
+    margin-top: 12px;
+}
+
+.product_detail{
+    max-width: 100%;
+    width: 1170px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    margin-top: 30px;
+}
+
+.product_detail_content{
+    width: 55%;
+    padding: 0 15px;
+}
+
+.product_detail_content_name{
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.1;
+    color: #222;
+}
+
+.product_detail_content_code{
+    display: flex;
+    margin-top: 15px;
+}
+
+.product_detail_content_codeSP{
+    font-size: 18px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #222;
+    padding-left: 5px;
+    margin-top: -1px;
+}
+
+.product_detail_content_price{
+    font-size: 30px;
+    color: #222;
+    margin: 25px 0;
+}
+
+.product_detail_content_listsize{
+    display: flex;
+    font-size: 14px;
+    font-weight: bold;
+    color: #222;
+    align-items: center;
+}
+
+.product_detail_content_item_size:hover{
+    background-color: #000;
+    color: #fff;
+}
+
+.product_detail_content_item_quantity{
+    height: 40px;
+    width: 165px;
+    border: 1px solid #d5d5d5 !important;
+    border-radius: 25px;
+    text-align: center;
+    font-size: 14px;
+    color: #222;
+    display: flex;
+    margin-top: 30px;
+}
+
+.product_detail_content_item_quantity_input{
+    margin-top: 4px;
+    border-color: #fff !important;
+    border: solid 0px #fff !important;
+    width: 70%;
+    text-align: center;
+}
+
+.product_detail_content_item_quantity_btn{
+    width: 25%;
+    cursor: pointer;
+    font-size: 20px;
+    margin-top: 3px;
+}
+
+.product_detail_content_item_add{
+    font-size: 16px;
+    color: #fff;
+    height: 44px;
+    width: 320px;
+    border-radius: 25px;
+    text-align: center;
+    line-height: 39px;
+    padding: 0;
+    font-weight: 300;
+    border: none;
+    display: inline-block;
+    border: 1px solid;
+    vertical-align: top;
+    background-color: #222;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+.product_detail_listimg{
+    width: 45%;
+    padding: 0 15px;
+}
+
+@media all and (max-width: 786px) {
+    .login_list_progress{
+        display: none;
+    }
+    .product_detail{
+        flex-direction: column;
+    }
+    .product_detail_listimg{    
+        width: 100%;
+    }
+    .product_detail_content{
+        width: 100%;
+    }
+}

@@ -1,0 +1,342 @@
+
+<link href="/static/css/home.css" rel="stylesheet">
+{% extends 'base_dashtreme_full_width.html' %}
+<!-- tmdt css-->
+{% block head %}
+<title>Trang chủ</title>
+<style>
+    .blog_item_style{
+        width: 33% !important;
+    }
+    .splide__track{
+        height: 100%;
+    }
+    @media all and (max-width: 786px) {
+        .blog_item_style{
+                width: 100% !important;
+                height: 33% !important;
+        }
+        .slide_body{
+            height: 800px;
+        }
+        .splide__list{
+            flex-wrap: wrap;
+            flex-direction: column;
+        }
+        .slide_body_blog{
+            height: 1200px;
+        }
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="mobile_menu">
+    <div id="logo_center">
+        <img style="vertical-align: middle; width: 100px;" src="../static/img/logo.jpg"></img>
+    </div>
+    <div class="list_mobile_menu">
+        <div id="btn_menuMobile_Home" class="item_mobile_menu">Trang chủ</div>
+        <div class="item_mobile_menu">Giới thiệu</div>
+        <div id="btn_showListItem" class="item_mobile_menu">Shop Online
+            <span  class="icon-sub-menu"><i id="changeIcon" class="fas fa-angle-down"></i></span>
+        </div>
+        <div class="list_sub_menu item_mobile_menu"></div>
+        <div id="btn_blogs_mobile"  class="item_mobile_menu">Blog</div>
+    </div>
+</div>
+<div id="mobile_overplay"></div>
+<div class="header_home">
+    <div>
+        <img class="img_top_header" src="../static/img/bg_header.jpg"></img>
+    </div>
+
+    <div class="header_home_center">
+        <div class="emty"></div>
+        <div class="center_text_mobile">
+             
+        </div>
+        <div class="right_center_header">
+            <div class="center_text_mobile" id="my_account">Tài khoản</div>
+            <div class="icon_account center_text_mobile"><i style="height:14px; width: 14px;" class="far fa-user"></i></div>
+            <div style="display: flex;" class="changeCart">
+                <div onclick="GotoCartPage()" id="btn_cart" class="my_cart">Giỏ hàng</div>
+                <div class="icon_cart"><i style="height:14px; width: 14px;" class="fas fa-shopping-cart icon_cart_i"></i></div>
+                <div style="padding: 0 10px;" id="lbl_numberCart" hidden>0</div>
+            </div>
+        </div>
+    </div> 
+    
+    <div class="nav_header">
+        <div class="nav_header_list">
+            <div class="nav_header_item">Giới thiệu</div>
+            <div id="shop_online" class="nav_header_item">Shop Online
+                <div class="nav_header_item_sub">
+                </div>
+            </div>
+            <div id="btn_blogs" class="nav_header_item">Blog</div>
+            <div id="btn_bars">
+                <i style="font-size: 20px;" class="fa fa-bars"></i>
+            </div>
+        </div>
+        <div id="logo" style="cursor: pointer;">
+            <img class="logo" src="../static/img/logo.jpg"></img>
+        </div>
+        <div class="nav_header_list">
+            <div class="nav_header_item" style="margin-left: auto;">Hướng dẫn mua hàng</div>
+            <div id="btn_search">
+                <i style="font-size: 20px;" class="fas fa-search"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="body_home">
+    <div id="typeName" class="body_home_title"></div>
+    <div class="body_home_title_img">
+        <img src="../static/images/img-title-body.png">
+    </div>
+    <section style="visibility: visible;" class="splide slide_body_blog" aria-label="Splide Basic HTML Example">
+        <div class="splide__track">
+              <ul id="list_blog1" class="splide__list">    
+              </ul>
+        </div>
+    </section>
+    <section style="visibility: visible;" class="splide slide_body_blog" aria-label="Splide Basic HTML Example">
+        <div class="splide__track">
+              <ul id="list_blog2" class="splide__list">    
+              </ul>
+        </div>
+    </section>
+    <section  style="visibility: visible;" class="splide slide_body_blog" aria-label="Splide Basic HTML Example">
+        <div class="splide__track">
+              <ul id="list_blog3" class="splide__list">    
+              </ul>
+        </div>
+    </section>
+</div>
+
+<div class="footer_home">
+    <div class="footer_home_list">
+        <div class="footer_home_item">
+            <div class="footer_home_item_hotline">
+                <span>HOTLINE:</span>
+                <a class="sdt">0896462282</a>
+            </div>
+            <div onclick="GotoTypePagePoliCy('bao-mat-thong-tin')" class="footer_home_item_link">Chính sách bảo mật thông tin khách hàng</div>
+            <div onclick="GotoTypePagePoliCy('doi-tra-san-pham')" class="footer_home_item_link">Chính sách đổi trả sản phẩm</div>
+            <div onclick="GotoTypePagePoliCy('bao-hanh')" class="footer_home_item_link">Chính sách bảo hành sản phẩm</div>
+            <div onclick="GotoTypePagePoliCy('van-chuyen')" class="footer_home_item_link">Chính sách giao nhận, vận chuyển</div>
+            <div onclick="GotoTypePagePoliCy('thanh-toan')" class="footer_home_item_link">Phương thức thanh toán</div>
+            <div onclick="GotoTypePagePoliCy('khach-hang-than-thiet')" class="footer_home_item_link">Chính sách khách hàng thân thiết</div>
+        </div>
+    </div>
+    <div style="width: 100%; justify-content: center; display: flex; margin-top: 20px;"><a href="https://www.facebook.com/AnQuocnT">Developed by Quốc An</a></div>
+</div>
+
+<li id="item_template" class="splide__slide slide_body_item blog_item_style" hidden>
+    <div class="boc_img_blog">
+        <img id="img_blog" class="img_blog">
+    </div>
+    <div id="lbl_blogTitle" class="slide_blog_item_product_content_center"></div>
+    <div id="lbl_blogContent" class="slide_blog_item_product_content_info"></div>
+</li>
+<!-- edit modal end-->
+
+<!-- modals end -->
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+g_types = []
+g_type_pk = null
+g_type = null
+g_showItem = false
+g_user = null
+g_blogs = null
+
+$(document).ready(function () {
+    g_type_pk = findGETParameter("pk")
+    GetTypeList()
+    GetUser()
+});
+
+function GetUser() 
+{
+    if(Cookies.get("token") == undefined) return
+    request_data = {
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/user/get'
+    ajaxRequest("POST", host_request, request_data, onGetUserSuccess, genericFailCB)
+}
+
+function onGetUserSuccess(res) {
+    g_user = res
+    GetMyNewOrder()
+}
+
+function GetMyNewOrder() 
+{
+    request_data = {
+        "user_pk":g_user._id.$oid
+    }
+    host_request = gethost() + '/api/order/getMyNew'
+    ajaxRequest("POST", host_request, request_data, onGetMyNewOrderSuccess, genericFailCB)
+}
+
+function onGetMyNewOrderSuccess(res) {
+    let myNewOrder = res.objects
+    if(myNewOrder.length > 0){
+        $("#lbl_numberCart").removeAttr('hidden')
+        document.getElementById("lbl_numberCart").innerText = myNewOrder.length
+        $('.changeCart').css('background-color', '#ff4136');
+    }
+    GetBlogList()
+}
+
+function GetTypeList() {
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "search_string": $("#txt_search").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/type/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchSuccess, genericFailCB)
+}
+
+function onSearchSuccess(res) {
+    var index = 1
+    g_types = res.objects
+    var parentElement = $('.nav_header_item_sub');
+    var parentElementSub = $('.list_sub_menu');
+    for (i = 0; i < g_types.length; i++) {
+        var newItem = $('<div>').addClass('nav_header_item_sub_item').text(g_types[i].name);
+        var newItemSub = $('<div>').addClass('item_sub_menu').text(g_types[i].name);
+        newItem.attr("onClick", 'GotoTypePage("' + g_types[i]._id.$oid + '")');
+        newItemSub.attr("onClick", 'GotoTypePage("' + g_types[i]._id.$oid + '")');
+        parentElement.append(newItem);
+        parentElementSub.append(newItemSub);
+    }
+}
+
+function GetBlogList() {
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/blog/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchBlogSuccess, genericFailCB)
+}
+
+function onSearchBlogSuccess(res) {
+    var index = 0
+    g_blogs = res.objects
+    for (let i = 0; i < g_blogs.length; i++) {
+        let item_template = $("#item_template").clone()
+        item_template.attr("onClick", 'ShowBlogDetail("' + g_blogs[i]._id.$oid + '")')
+        item_template.removeAttr('hidden')
+        if(g_blogs[i].image != null){
+            item_template.find("#img_blog").attr("src",g_blogs[i].image) 
+        }else{
+            item_template.find("#img_blog").attr("src",'../static/img/logo.jpg') 
+        }
+        item_template.find("#lbl_blogTitle").html(g_blogs[i].title)
+        item_template.find("#lbl_blogContent").html(g_blogs[i].content)
+        console.log('haha')
+        if(index<=2)
+            $("#list_blog1").append(item_template)
+        else if(index>2 && index<=5)
+            $("#list_blog2").append(item_template)
+        else if(index>5 && index<=8)
+            $("#list_blog3").append(item_template)
+        index += 1
+    }
+}
+
+$("#my_account").click(function () {
+    window.location.href = "/login";
+});
+
+$("#logo").click(function () {
+    window.location.href = "/";
+});
+
+$("#btn_cart").click(function () {
+    window.location.href = "/cart";
+});
+
+$("#logo_center").click(function () {
+    window.location.href = "/";
+});
+
+$("#btn_blogs").click(function () {
+    window.location.href = "/blogs";
+});
+
+$("#btn_blogs_mobile").click(function () {
+    window.location.href = "/blogs";
+});
+
+$("#btn_bars").click(function () {
+    document.getElementById("mobile_overplay").style.visibility = "visible"
+    document.querySelector('.mobile_menu').classList.toggle('active');
+    document.querySelector('#mobile_overplay').classList.toggle('active');
+});
+
+$("#mobile_overplay").click(function () {
+    document.getElementById("mobile_overplay").style.visibility = "hidden"
+    document.querySelector('.mobile_menu').classList.toggle('active');
+    document.querySelector('#mobile_overplay').classList.toggle('active');
+});
+
+$("#btn_menuMobile_Home").click(function () {
+    window.location.href = "/";
+});
+
+$("#btn_showListItem").click(function () {
+    if(!g_showItem)
+    {
+        document.getElementById("changeIcon").classList.remove("fas", "fa-angle-down");
+        document.getElementById("changeIcon").classList.add("fas", "fa-times");
+        g_showItem = true
+    }else{
+        document.getElementById("changeIcon").classList.remove("fas", "fa-times");
+        document.getElementById("changeIcon").classList.add("fas", "fa-angle-down");
+        g_showItem = false
+    }
+    document.querySelector('.list_sub_menu').classList.toggle('active');
+});
+
+function GotoTypePage(subject_pk)
+{
+    g_subject_pk = subject_pk
+    window.location = "/type/?pk=" + subject_pk
+}
+
+function GotoTypePagePoliCy(name)
+{
+    window.location = "/policy/?name=" + name
+}
+
+function GotoCartPage(name)
+{
+    if(g_user == null){
+        showError("Bạn chưa đăng nhập")
+        setTimeout(function() {
+            window.location.href = "/login";
+        }, 1500)
+        return
+    }
+    window.location.href = "/cart";
+}
+
+function ShowBlogDetail(blog_pk)
+{
+    window.location = "/blog_detail/?pk=" + blog_pk
+}
+
+</script>
+
+{% endblock %}

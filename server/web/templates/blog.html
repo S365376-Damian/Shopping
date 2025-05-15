@@ -1,0 +1,316 @@
+{% extends 'base_dashtreme.html' %}
+{% block head %}
+<title>Danh sách Blog</title>
+{% endblock %}
+{% block body %}
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">Danh sách Blog
+                <div class="row" style="padding:10px 0 0 10px">
+                    <div class="form-group col-md-3">
+                        <input type="text" placeholder="Name" name="text" id='txt_search' class="form-control "> 
+                    </div>                
+                    <div class="col-md-2">
+                        <button id ="btn_search" class="btn btn-primary btn-default">
+                            <i class="fas fa-search"></i> Tìm kiếm</button>
+                    </div>
+                    <div class="col-md-2">
+                        <button id ="btn_showModal" class="btn btn-primary btn-success">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Thêm Blog</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover" id="result_table">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Name</th>
+                            <th>Ngày cập nhật</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div><!--End Row-->
+
+
+<!-- modals -->
+
+<!-- edit modal-->
+<div class="modal fade" id="modal_blog" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content panel-yellow">
+            <div class="modal-header panel-heading">                
+                <h4 class="modal-title" id="lbl_modal_title">Cập nhật blog</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body panel-body">
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Tiêu đề</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control" id="txt_title">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Nội dung</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-book"></i></span>
+                            <textarea id="txt_content" class="form-control" name="content"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Ảnh</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <img style="height: 100px; width: 100px; border-radius: 4px;" id="img_blog" src="">
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_image" class="btn btn-default btn-success"><span class="fa fa-product"><span>Thêm ảnh</button>
+                <button id="btn_update" class="btn btn-default btn-success"><span class="fa fa-save"><span>Cập nhật</button>
+                <button id="btn_delete" class="btn btn-default btn-danger pull-right" style="display: none;"><span class="fa fa-trash"><span>Xóa</button>
+            </div> <!-- end modal body-->
+        </div>
+    </div>
+</div>
+
+<label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file" hidden>
+    <input type="file" class="sr-only" id="inputImage" name="file" accept="image/*">                            
+    <span class="fa fa-upload"></span>                            
+</label>
+
+<!-- edit modal end-->
+
+<!-- modals end -->
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+g_servicePack = ""
+g_purpose = ""
+g_level = "{{level}}"
+g_blogs = null
+g_blog = null
+g_blogPk = null
+g_imgBlog = ""
+
+
+$(document).ready(function () {
+    GetBlogList()
+});
+
+$("#btn_search").click(function () { 
+    GetBlogList()
+});
+
+
+function GetBlogList() {
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "level": g_level,
+        "search_string": $("#txt_search").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/blog/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchSuccess, genericFailCB)
+}
+
+function onSearchSuccess(res) {
+    var index = 1
+    g_blogs = res.objects
+    if(g_blogs.length == 0)
+    {
+        ShowToast("Không tìm thấy blog")
+    }
+    for (i = 0; i < g_blogs.length; i++) {
+        $('#result_table > tbody:last-child').append(genRow(g_blogs[i], index++))
+    }
+    $("#search_result").show()
+}
+
+function genRow(blog, order) {
+    row = '<tr class="trow" id="' + blog._id.$oid + '">' +
+        "<td>" + order + "</td>" +
+        "<td>" + blog.title + "</td>" +
+        "<td>" + datetimeConverter(blog.dateUpdate.$date) + "</td>" +
+        "</tr>"
+    return row
+}
+
+$("#result_table").on("click", "tbody tr", function (event) {
+    //handle row click
+
+    g_blog = GetObjectByPk(g_blogs, this.id)
+    document.getElementById("lbl_modal_title").innerText = "Cập nhật blog"
+    document.getElementById("btn_update").innerText = "Lưu lại"
+
+    g_blogPk = g_blog._id.$oid
+    $("#btn_delete").show()
+    $("#btn_update").show()
+    if(g_blog.image)
+    {
+        document.getElementById("btn_image").innerText = "Đổi ảnh"
+        g_imgBlog = g_blog.image
+        $("#img_blog").show();
+    }
+    else
+    {
+        document.getElementById("btn_image").innerText = "Thêm ảnh"
+        $("#img_blog").hide();
+    }
+
+    if (g_blog == null) {
+        showError("Không lấy được thông tin type, vui lòng tìm kiếm lại!")
+        return
+    }
+    $("#txt_title").val(g_blog.title)
+    $("#txt_content").val(g_blog.content)
+    $("#img_blog").attr("src", g_imgBlog);
+    $("#modal_blog").modal()
+});
+
+
+$("#btn_showModal").click(function () {
+    document.getElementById("btn_image").innerText = "Thêm ảnh"
+    $("#img_blog").hide();
+    g_imgBlog = ""
+    g_blogPk = null
+    document.getElementById("lbl_modal_title").innerText = "Tạo blog"
+    document.getElementById("btn_update").innerText = "Lưu blog"
+    $("#btn_delete").hide()
+    $("#modal_blog").modal()
+    $("#txt_title").val('')
+    $("#txt_content").val('')
+})
+
+$("#btn_update").click(function () {
+    if(!CheckRequreField()) return
+    request_data = {
+        "pk" : g_blogPk,
+        "image": g_imgBlog,
+        "title" : $("#txt_title").val(),
+        "content" : $("#txt_content").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/blog/update'
+    ajaxRequest("POST", host_request, request_data, onEditSuccess, genericFailCB)
+});
+
+function onEditSuccess(res) {
+    $("#modal_blog").modal('hide')
+    $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetBlogList()
+}
+
+function CheckRequreField()
+{
+    if($("#txt_title").val() == "")
+    {
+        showError("Chưa nhập tên blog")
+        return false
+    }
+
+    return true
+}
+
+$("#btn_delete").click(function () {
+    request_data = {
+        "pk": g_blogPk,
+        "level": g_level,
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + "/api/blog/delete"
+    ajaxRequest("POST", host_request, request_data, updateSuccessAndClose, genericFailCB);
+})
+
+function updateSuccessAndClose(res) {
+    $("#modal_blog").modal('hide')
+    $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetBlogList()
+}
+
+$("#btn_image").click(function () {
+    $("#inputImage").click()
+});
+
+$("#inputImage").on('change', function(e){
+    if (this.files && this.files[0]) 
+    {    
+        //load image to canvas
+        var URL = window.URL;
+        var url = URL.createObjectURL(e.target.files[0]);
+                
+        
+        //convert image to base64
+        var FR= new FileReader();
+        FR.addEventListener("load", function(ee) 
+        {
+            var img = document.createElement("img");
+            img.src = ee.target.result
+            img.onload = function () 
+            {
+                base64_string = ResizeImage(img, 1000)
+                g_imgBlog = base64_string
+                $("#img_blog").attr("src", g_imgBlog);
+                $("#img_blog").show();
+            };
+
+        }); 
+        FR.readAsDataURL( this.files[0] );
+    }
+})
+
+function ResizeImage(img, maxWidth)
+{
+    newWidth = img.width
+    newHeight = img.height
+
+    
+    if(img.width > maxWidth)
+    {
+        newWidth = maxWidth
+        newHeight = ((img.height * maxWidth ) / img.width)
+    }
+
+    // create an off-screen canvas
+    var canvas = document.createElement('canvas'),
+    ctx = canvas.getContext('2d');
+
+    // set its dimension to target size
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+
+    // draw source image into the off-screen canvas:
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    // encode image to data-uri with base64 version of compressed image
+    return canvas.toDataURL('image/jpeg', 0.9);
+}
+
+</script>
+
+{% endblock %}

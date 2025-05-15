@@ -1,0 +1,404 @@
+{% extends 'base_dashtreme.html' %}
+{% block head %}
+<title>Danh sách thú cưng</title>
+{% endblock %}
+{% block body %}
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">Danh sách thú cưng
+                <div class="row" style="padding:10px 0 0 10px">
+                    <div class="form-group col-md-3">
+                        <input type="text" placeholder="Phone Owner" name="text" id="txt_search" class="form-control "> 
+                    </div>                
+                    <div>
+                        <button id ="btn_search" class="btn btn-primary btn-default">
+                            <i class="fas fa-search"></i> Tìm kiếm</button>
+                    </div>
+                    <div class="col-md-2">
+                        <button id ="btn_showModal" class="btn btn-primary btn-default">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Thêm thú cưng</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover" id="result_table">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên thú cưng</th>
+                            <th>SDT chủ</th>
+                            <th>Giống</th>
+                            <th>Màu</th>
+                            <th>Giới tính</th>
+                            <th>Tuổi</th>
+                            <th>Ngày gửi</th>
+                            <th>Ngày trả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div><!--End Row-->
+
+
+<!-- modals -->
+
+<!-- edit modal-->
+<div class="modal fade" id="modal_pet" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content panel-yellow">
+            <div class="modal-header panel-heading">                
+                <h4 class="modal-title" id="lbl_modal_title">Cập nhật thú cưng</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body panel-body">
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Tên pet</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fa fa-envelope"></i> </span>
+                            <input type="text" class="form-control" id="txt_name">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>SDT chủ</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-map-marker-alt"></i></span>
+                            <input type="text" class="form-control" id="txt_phoneOwner">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Giống</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-dog"></i> </span>
+                            <input type="text" class="form-control" id="txt_breed">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Màu</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-palette"></i> </span>
+                            <input type="text" class="form-control" id="txt_color">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Giới tính</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-venus-double"></i> </span>
+                            <input type="text" class="form-control" id="txt_gender">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Tuổi</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-heart"></i> </span>
+                            <input type="number" class="form-control" id="txt_age">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Ngày gửi</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-table"></i></i></span>
+                            <input type="datetime-local" placeholder="Ngày gửi" name="text" id='txt_dateStart' class="form-control "> 
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Ngày trả</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-table"></i></i></span>
+                            <input type="datetime-local" placeholder="Ngày trả" name="text" id='txt_dateEnd' class="form-control "> 
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Ảnh</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <img style="height: 100px; width: 100px; border-radius: 4px;" id="img_pet" src="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                    <div class="pull-right">
+                        <button id="btn_product" class="btn btn-default btn-success"><span class="fa fa-product"><span>
+                                Thêm ảnh</button>
+                        <button id="btn_update" class="btn btn-default btn-success"><span class="fa fa-save"><span>
+                                Cập nhật</button>
+                        <button id="btn_delete" class="btn btn-default btn-danger"><span class="fa fa-trash"><span>
+                                Xóa</button>
+                        </div>
+                    </div>
+                </div>
+                <label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file" hidden>
+                    <input type="file" class="sr-only" id="inputImage" name="file" accept="image/*">                            
+                    <span class="fa fa-upload"></span>                            
+                </label>
+                <div class="col-md-5" id="div_cropped" hidden>
+                    <canvas id="canvas_thumbnail" width="256" height="256" style="border: 1px solid #007fc6; border-radius: 10px; max-width: 256px;">                    
+                </div>
+            </div> <!-- end modal body-->
+        </div>
+    </div>
+</div>
+
+<!-- edit modal end-->
+
+<!-- modals end -->
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+g_servicePack = ""
+g_purpose = ""
+g_userLevel = ""
+g_pets = null
+g_pet = null
+g_petPk = null
+g_imgPet = ""
+
+$(document).ready(function () {
+    GetPetList()
+});
+
+$("#btn_search").click(function () {
+    GetPetList()
+});
+
+function GetPetList() {
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "phone" : $("#txt_search").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/pet/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchSuccess, genericFailCB)
+}
+
+function onSearchSuccess(res) {
+    var index = 1
+    g_pets = res.objects
+    if(g_pets.length == 0)
+    {
+        ShowToast("Không tìm thấy pet")
+    }
+    for (i = 0; i < g_pets.length; i++) {
+        $('#result_table > tbody:last-child').append(genRow(g_pets[i], index++))
+    }
+    $("#search_result").show()
+}
+
+function genRow(pet, order) {
+    row = '<tr class="trow" id="' + pet._id.$oid + '">' +
+        "<td>" + order + "</td>" +
+        "<td>" + pet.name + "</td>" +
+        "<td>" + pet.owner + "</td>" +
+        "<td>" + (pet.breed ? pet.breed : "") + "</td>" +
+        "<td>" + (pet.color ? pet.color : "") + "</td>" +
+        "<td>" + (pet.gender ? pet.gender : "") + "</td>" +
+        "<td>" + (pet.age ? pet.age : "") + "</td>" +
+        "<td>" + datetimeConverter(pet.dateStart.$date) + "</td>" +
+        "<td>" + datetimeConverter(pet.dateEnd.$date) + "</td>" +
+        "</tr>"
+    return row
+}
+
+$("#result_table").on("click", "tbody tr", function (event) {
+    g_imgPet = ""
+    document.getElementById("btn_update").innerText = "Cập nhật thú cưng"
+    document.getElementById("lbl_modal_title").innerText = "Cập nhật thú cưng"
+    //handle row click
+    g_pet = GetObjectByPk(g_pets, this.id)
+    g_petPk = g_pet._id.$oid
+    if(g_pet.image)
+    {
+        document.getElementById("btn_product").innerText = "Đổi ảnh"
+        g_imgPet = g_pet.image
+        $("#img_pet").show();
+    }
+    else
+    {
+        document.getElementById("btn_product").innerText = "Thêm ảnh"
+        $("#img_pet").hide();
+    }
+    $("#img_pet").attr("src", g_imgPet);
+    $("#txt_name").val(g_pet.name)
+    $("#txt_phoneOwner").val(g_pet.owner)
+    $("#txt_breed").val(g_pet.breed)
+    $("#txt_color").val(g_pet.color)
+    $("#txt_gender").val(g_pet.gender)
+    $("#txt_age").val(g_pet.age)
+    $("#txt_dateStart").val(datetimelocalConverter(g_pet.dateStart.$date))
+    $("#txt_dateEnd").val(datetimelocalConverter(g_pet.dateEnd.$date))
+    $("#btn_update").show()
+    $("#btn_delete").show()
+    $("#modal_pet").modal()
+});
+
+
+$("#btn_showModal").click(function () {
+    document.getElementById("btn_product").innerText = "Thêm ảnh"
+    g_imgPet = ""
+    $("#img_pet").hide();
+    g_petPk = null
+    $("#txt_name").val('')
+    $("#txt_phoneOwner").val('')
+    $("#txt_breed").val("")
+    $("#txt_color").val("")
+    $("#txt_gender").val("")
+    $("#txt_age").val("")
+    $("#txt_dateStart").val("")
+    $("#txt_dateEnd").val("")
+    $("#btn_delete").hide()
+    $("#modal_pet").modal()
+    document.getElementById("btn_update").innerText = "Thêm thú cưng"
+    document.getElementById("lbl_modal_title").innerText = "Thêm thú cưng"
+})
+
+$("#btn_update").click(function () {
+    request_data = {
+        "pk" : g_petPk,
+        "name": $("#txt_name").val(),
+        "owner": $("#txt_phoneOwner").val(),
+        "breed": $("#txt_breed").val(),
+        "color": $("#txt_color").val(),
+        "gender": $("#txt_gender").val(),
+        "age": $("#txt_age").val(),
+        "image": g_imgPet,
+        "dateStart": $("#txt_dateStart").val(),
+        "dateEnd": $("#txt_dateEnd").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/pet/update'
+    ajaxRequest("POST", host_request, request_data, onEditSuccess, genericFailCB)
+});
+
+function onEditSuccess(res) {
+    // document.getElementById("frm_edit").reset();
+    $("#modal_pet").modal('hide')
+    $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetPetList()
+}
+
+$("#btn_product").click(function () {
+    $("#inputImage").click()
+});
+
+$("#inputImage").on('change', function(e){
+    if (this.files && this.files[0]) 
+    {    
+        //load image to canvas
+        var URL = window.URL;
+        var url = URL.createObjectURL(e.target.files[0]);
+                
+        
+        //convert image to base64
+        var FR= new FileReader();
+        FR.addEventListener("load", function(ee) 
+        {
+            var img = document.createElement("img");
+            img.src = ee.target.result
+            img.onload = function () 
+            {
+                base64_string = ResizeImage(img, 1000)
+                g_imgPet = base64_string
+                $("#img_pet").attr("src", g_imgPet);
+                $("#img_pet").show();
+            };
+
+        }); 
+        FR.readAsDataURL( this.files[0] );
+    }
+})
+
+
+
+$("#btn_delete").click(function () {
+    request_data = {
+        "pk" : g_petPk,
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + "/api/pet/delete"
+    ajaxRequest("POST", host_request, request_data, onDeleteSuccess, genericFailCB);
+})
+
+function onDeleteSuccess(res) {
+    // document.getElementById("frm_edit").reset();
+    $("#modal_pet").modal('hide')
+    $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetPetList()
+}
+
+function ResizeImage(img, maxWidth)
+{
+    newWidth = img.width
+    newHeight = img.height
+
+    
+    if(img.width > maxWidth)
+    {
+        newWidth = maxWidth
+        newHeight = ((img.height * maxWidth ) / img.width)
+    }
+
+    // create an off-screen canvas
+    var canvas = document.createElement('canvas'),
+    ctx = canvas.getContext('2d');
+
+    // set its dimension to target size
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+
+    // draw source image into the off-screen canvas:
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    // encode image to data-uri with base64 version of compressed image
+    return canvas.toDataURL('image/jpeg', 0.9);
+}
+
+
+</script>
+
+{% endblock %}
